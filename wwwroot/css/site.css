@@ -1,13 +1,16 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+/*
 a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
 }
+*/
 
 /* Provide sufficient contrast against white background */
+/*
 a {
   color: #0366d6;
 }
@@ -23,9 +26,11 @@ a {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+*/
 
 /* Sticky footer styles
 -------------------------------------------------- */
+/*
 html {
   font-size: 14px;
 }
@@ -50,17 +55,19 @@ button.accept-policy {
   font-size: 1rem;
   line-height: inherit;
 }
+*/
 
 /* Sticky footer styles
 -------------------------------------------------- */
+/*
 html {
   position: relative;
   min-height: 100%;
-}
+}*/
 
 body {
   /* Margin bottom by footer height */
-  margin-bottom: 60px;
+  /*margin-bottom: 60px;*/
 }
 .footer {
   position: absolute;
@@ -69,3 +76,89 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+
+* {
+    margin: 0;
+    padding: 0;
+    background-color: #ADD8E6;
+}
+
+h1 {
+    font-size: 3rem
+}
+
+h2 {
+    margin-left: 20%;
+    margin-top: 3%;
+    margin-bottom: 1%;
+    font-size: 2rem
+}
+
+.header2 {
+    margin-left: 20%;
+    margin-top: 6%;
+    margin-bottom: 1%;
+    font-size: 2rem
+}
+
+.title {
+    text-align: center;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+hr {
+    width: 80%;
+    margin: auto;
+}
+
+.row {
+    width: 50%;
+    height: 20%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 1%;
+}
+
+.form1 {
+    width: 20%;
+    float: left;
+}
+
+.form2 {
+    width: 20%;
+    margin-left: 50%;
+}
+
+label {
+    font-size: 1em;
+    font-weight: 900;
+}
+
+input {
+    width: 180%;
+}
+
+.buttons {
+    margin-top: 5%;
+}
+
+.first_button {
+    margin-left: 20%;
+    width: 50%;
+    margin-bottom: 5%;
+}
+
+button {
+    border-radius: 4px;
+    padding: 14px 40px;
+    font-size: 14px;
+    background-color: #C0C0C0;
+}
+
+    button:hover {
+        background-color: #4CAF50;
+        color: white;
+    }
+

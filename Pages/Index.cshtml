@@ -4,7 +4,84 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1>Hello, world!</h1>
-    <p>The time on the server is @DateTime.Now</p>
-</div>
+<section class="personal_info">
+    <div class="title">
+        <h1>Registračný formulár</h1>
+    </div>
+    <hr>
+    <div class="personal_form">
+        <h2>Základné údaje</h2>
+        <div class="row">
+            <div class="form1">
+                <label>Meno</label>
+                <input class="firstName" />
+            </div>
+            <div class="form2">
+                <label>Priezvisko</label>
+                <input class="lastName" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="form1">
+                <label>Titul</label>
+                <input class="title" />
+            </div>
+            <div class="form2">
+                <label>Dátum narodenia</label>
+                <input class="date" type="date" />
+            </div>
+        </div>
+        <h2>Adresa</h2>
+        <div class="row">
+            <div class="form1">
+                <label>Ulica</label>
+                <input class="street" />
+            </div>
+            <div class="form2">
+                <label>Číslo</label>
+                <input class="adress_number" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="form1">
+                <label>Mesto</label>
+                <input class="city" />
+            </div>
+            <div class="form2">
+                <label>PSČ</label>
+                <input class="psc" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="form1">
+                <label>Krajina</label>
+                <input class="country" />
+            </div>
+        </div>
+        <h2 class="header2">Identifikačný doklad</h2>
+        <div class="row">
+            <div class="form1">
+                <label>Číslo OP</label>
+                <input class="op_number" />
+            </div>
+            <div class="form2">
+                <label>Krajina vydania</label>
+                <input class="country_op" />
+            </div>
+        </div>
+        <h2>Kontaktné údaje</h2>
+        <div class="row">
+            <div class="form1">
+                <label>E-mail</label>
+                <input class="email" />
+            </div>
+        </div>
+    </div>
+</section>
+<section class="buttons">
+    <div class="first_button">
+        <button class="save_xml">Uložiť XML</button>
+        <button class="valid_xsd">Validácia XSD</button>
+        <button class="save_html">Uložiť HTML</button>
+    </div>
+</section>

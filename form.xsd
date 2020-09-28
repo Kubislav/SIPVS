@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<xs:element name="application">
+  <xs:complexType>
+		<xs:element name="applicant">
+			<xs:complexType>
+				<xs:sequence>
+					 <xs:element name="name" type="xs:string" default="None" />
+					 <xs:element name="surname" type="xs:string" default="None"/>
+					 <xs:element name="title" type="xs:string" default="None"/>
+					 <xs:element name="date of birth">
+						<xs:simpleType>
+							<xs:restriction base="xs:date">
+								<xs:minInclusive value="1900-01-01"/>
+							</xs:restriction>
+						</xs:simpleType>
+					 </xs:element>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:element>
+		
+		<xs:element name="permanent residence">
+			<xs:complexType>
+				<xs:sequence>
+					<xs:element name="street and number" type="xs:string" default="None"/>
+					<xs:element name="city" type="xs:string" default="None"/>
+					<xs:element name="psc" type="xs:integer"/>
+					<xs:element name="country" type="xs:string" default="None"/>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:element>
+		
+		<xs:element name="identification document">
+			<xs:complexType>
+				<xs:sequence>
+					<xs:element name="id card" type="xs:string" default="None"/>
+					<xs:element name="contry of edition" type="xs:string" default="None"/>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:element>
+		
+		
+		<xs:element name="contact information">
+			<xs:complexType>
+				<xs:sequence>
+					<xs:element name="email" type="xs:string" default="None"/>
+					<xs:element name="phone number" type="xs:integer" default="None"/>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:element>
+		
+  </xs:complexType>
+</xs:element>
+
+</xs:schema> 
