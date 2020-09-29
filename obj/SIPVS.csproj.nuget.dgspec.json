@@ -1,28 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "/Users/ondrej/Git/SIPVS/SIPVS.csproj": {}
+    "C:\\Users\\Owner\\Downloads\\SIPVS-master (1)\\SIPVS-master\\SIPVS.csproj": {}
   },
   "projects": {
-    "/Users/ondrej/Git/SIPVS/SIPVS.csproj": {
+    "C:\\Users\\Owner\\Downloads\\SIPVS-master (1)\\SIPVS-master\\SIPVS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/ondrej/Git/SIPVS/SIPVS.csproj",
+        "projectUniqueName": "C:\\Users\\Owner\\Downloads\\SIPVS-master (1)\\SIPVS-master\\SIPVS.csproj",
         "projectName": "SIPVS",
-        "projectPath": "/Users/ondrej/Git/SIPVS/SIPVS.csproj",
-        "packagesPath": "/Users/ondrej/.nuget/packages/",
-        "outputPath": "/Users/ondrej/Git/SIPVS/obj/",
+        "projectPath": "C:\\Users\\Owner\\Downloads\\SIPVS-master (1)\\SIPVS-master\\SIPVS.csproj",
+        "packagesPath": "C:\\Users\\Owner\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Owner\\Downloads\\SIPVS-master (1)\\SIPVS-master\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "/Users/ondrej/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Owner\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -56,7 +55,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.201/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
         }
       }
     }

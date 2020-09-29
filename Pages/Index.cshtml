@@ -23,8 +23,8 @@
         </div>
         <div class="row">
             <div class="form1">
-                <label>Titul</label>
-                <input class="title" />
+                <label>E-mail</label>
+                <input class="email_customer" />
             </div>
             <div class="form2">
                 <label>Dátum narodenia</label>
@@ -38,50 +38,75 @@
                 <input class="street" />
             </div>
             <div class="form2">
-                <label>Číslo</label>
+                <label>Číslo ulice</label>
                 <input class="adress_number" />
             </div>
         </div>
         <div class="row">
             <div class="form1">
-                <label>Mesto</label>
-                <input class="city" />
+                <label>PSČ</label>
+                <input class="postal_Code" />
             </div>
             <div class="form2">
-                <label>PSČ</label>
-                <input class="psc" />
+                <label>Mesto</label>
+                <input class="town_customer" />
             </div>
         </div>
         <div class="row">
             <div class="form1">
                 <label>Krajina</label>
-                <input class="country" />
+                <input class="Country" />
             </div>
         </div>
-        <h2 class="header2">Identifikačný doklad</h2>
+        <h2 class="header2">Kniha</h2>
         <div class="row">
             <div class="form1">
-                <label>Číslo OP</label>
-                <input class="op_number" />
+                <label>Názov</label>
+                <input class="book_name" />
             </div>
             <div class="form2">
-                <label>Krajina vydania</label>
-                <input class="country_op" />
+                <label>Autor</label>
+                <input class="book_author" />
             </div>
         </div>
-        <h2>Kontaktné údaje</h2>
         <div class="row">
             <div class="form1">
-                <label>E-mail</label>
-                <input class="email" />
+                <label>Žáner</label>
+                <input class="book_genre" />
+            </div>
+            <div class="form2">
+                <label>Dátum vypožičania</label>
+                <input class="book_reserve" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="form1">
+                <label>Dátum vrátenia</label>
+                <input class="book_return" />
             </div>
         </div>
     </div>
 </section>
+
+<div id="next_book"></div>
 <section class="buttons">
     <div class="first_button">
+        <button class="add_book" onclick="myFunction()">Pridat knihu</button>
         <button class="save_xml">Uložiť XML</button>
         <button class="valid_xsd">Validácia XSD</button>
         <button class="save_html">Uložiť HTML</button>
     </div>
+    
 </section>
+
+
+
+<script>
+    function myFunction() {
+        
+        var btn = document.createElement("next_book");
+            btn.innerHTML = '<h2 class="header2">Kniha</h2><div class="row"><div class="form1"><label>Názov</label><input class="book_name" /></div><div class="form2"><label>Autor</label><input class="book_author" /></div></div ><div class="row"><div class="form1"><label>Žáner</label><input class="book_genre" /></div><div class="form2"><label>Dátum vypožičania</label><input class="book_reserve" /></div></div><div class="row"><div class="form1"><label>Dátum vrátenia</label><input class="book_return" /></div></div>';
+        document.getElementById("next_book").appendChild(btn);
+    }
+
+</script>
