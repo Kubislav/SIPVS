@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-<xs:element name="application">
+<xs:element name="registration">
   <xs:complexType>
-		<xs:element name="applicant">
+		<xs:element name="person info">
 			<xs:complexType>
 				<xs:sequence>
 					 <xs:element name="name" type="xs:string" default="None" />
 					 <xs:element name="surname" type="xs:string" default="None"/>
-					 <xs:element name="title" type="xs:string" default="None"/>
+					 <xs:element name="email" type="xs:string" default="None"/>
 					 <xs:element name="date of birth">
 						<xs:simpleType>
 							<xs:restriction base="xs:date">
@@ -20,10 +20,11 @@
 			</xs:complexType>
 		</xs:element>
 		
-		<xs:element name="permanent residence">
+		<xs:element name="adress">
 			<xs:complexType>
 				<xs:sequence>
-					<xs:element name="street and number" type="xs:string" default="None"/>
+					<xs:element name="street" type="xs:string" default="None"/>
+					<xs:element name="street number" type="xs:integer" default="None"/>
 					<xs:element name="city" type="xs:string" default="None"/>
 					<xs:element name="psc" type="xs:integer"/>
 					<xs:element name="country" type="xs:string" default="None"/>
@@ -31,24 +32,29 @@
 			</xs:complexType>
 		</xs:element>
 		
-		<xs:element name="identification document">
+		<xs:element name="Booklist">
 			<xs:complexType>
 				<xs:sequence>
-					<xs:element name="id card" type="xs:string" default="None"/>
-					<xs:element name="contry of edition" type="xs:string" default="None"/>
+					<xs:element maxOcurs="unbounded" ref="book"/>
 				</xs:sequence>
 			</xs:complexType>
 		</xs:element>
 		
 		
-		<xs:element name="contact information">
+		<xs:element name="book">
 			<xs:complexType>
 				<xs:sequence>
-					<xs:element name="email" type="xs:string" default="None"/>
-					<xs:element name="phone number" type="xs:integer" default="None"/>
+					<xs:element name="BookName" type="xs:string" default="None"/>
+					<xs:element name="author" type="xs:string" default="None"/>
+					<xs:element name="genre" type="xs:string" default="None"/>
+					<xs:element name="DateOfBorrow" type="xs:date" default="None"/>
+					<xs:element name="DateOfReturn" type="xs:date" default="None"/>
 				</xs:sequence>
 			</xs:complexType>
 		</xs:element>
+		
+		
+		
 		
   </xs:complexType>
 </xs:element>
