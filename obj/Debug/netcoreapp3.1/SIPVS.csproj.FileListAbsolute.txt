@@ -34,3 +34,40 @@
 /Users/ondrej/Git/SIPVS/obj/Debug/netcoreapp3.1/SIPVS.pdb
 /Users/ondrej/Git/SIPVS/obj/Debug/netcoreapp3.1/SIPVS.genruntimeconfig.cache
 /Users/ondrej/Git/SIPVS/obj/Debug/netcoreapp3.1/SIPVS.csproj.CopyComplete
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\bin\Debug\netcoreapp3.1\appsettings.Development.json
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\bin\Debug\netcoreapp3.1\appsettings.json
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\bin\Debug\netcoreapp3.1\SIPVS.exe
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\bin\Debug\netcoreapp3.1\SIPVS.deps.json
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\bin\Debug\netcoreapp3.1\SIPVS.runtimeconfig.json
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\bin\Debug\netcoreapp3.1\SIPVS.runtimeconfig.dev.json
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\bin\Debug\netcoreapp3.1\SIPVS.dll
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\bin\Debug\netcoreapp3.1\SIPVS.pdb
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\bin\Debug\netcoreapp3.1\SIPVS.Views.dll
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\bin\Debug\netcoreapp3.1\SIPVS.Views.pdb
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.csprojAssemblyReference.cache
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.AssemblyInfoInputs.cache
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.AssemblyInfo.cs
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.csproj.CoreCompileInputs.cache
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.RazorAssemblyInfo.cache
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.RazorAssemblyInfo.cs
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.TagHelpers.input.cache
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.TagHelpers.output.cache
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.RazorCoreGenerate.cache
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\Razor\Pages\Error.cshtml.g.cs
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\Razor\Pages\Index.cshtml.g.cs
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\Razor\Pages\Privacy.cshtml.g.cs
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\Razor\Pages\Shared\_Layout.cshtml.g.cs
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\Razor\Pages\Shared\_ValidationScriptsPartial.cshtml.g.cs
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\Razor\Pages\_ViewImports.cshtml.g.cs
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\Razor\Pages\_ViewStart.cshtml.g.cs
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.RazorTargetAssemblyInfo.cache
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.RazorTargetAssemblyInfo.cs
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.Views.pdb
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\staticwebassets\SIPVS.StaticWebAssets.Manifest.cache
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\staticwebassets\SIPVS.StaticWebAssets.xml
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.dll
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.pdb
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.genruntimeconfig.cache
+C:\Users\Owner\Downloads\SIPVS-master (1)\SIPVS-master\obj\Debug\netcoreapp3.1\SIPVS.csproj.CopyComplete
