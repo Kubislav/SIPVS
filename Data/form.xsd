@@ -3,7 +3,7 @@
 
 <xs:element name="registration">
   <xs:complexType>
-		<xs:element name="person info">
+		<xs:element name="personal_info">
 			<xs:complexType>
 				<xs:sequence>
 					 <xs:element name="name" type="xs:string" default="None" />
@@ -20,7 +20,7 @@
 			</xs:complexType>
 		</xs:element>
 		
-		<xs:element name="adress">
+		<xs:element name="address">
 			<xs:complexType>
 				<xs:sequence>
 					<xs:element name="street" type="xs:string" default="None"/>
@@ -32,7 +32,7 @@
 			</xs:complexType>
 		</xs:element>
 		
-		<xs:element name="Booklist">
+		<xs:element name="books">
 			<xs:complexType>
 				<xs:sequence>
 					<xs:element maxOcurs="unbounded" ref="book"/>

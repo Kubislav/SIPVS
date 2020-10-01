@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 public interface IFormService
 {
-  public string SaveXml(FormModel formModel);
+  public string SaveXml(string xml);
   
   public string ValidXsd();
 

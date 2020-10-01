@@ -15,18 +15,19 @@ namespace SIPVS {
             this._formService = formService;
         }
 
-        // [HttpPost]
-        // public void Create([FromBody]Transaction transaction)
+        // [HttpPost("save_xml")]
+        // public IActionResult saveXml(DataModel data)
         // { 
-        //     this._transactionService.SaveTransaction(transaction);
+        //     System.Console.WriteLine("data from post request: " + data.data);
+        //     FormModel formModel = new FormModel();
+        //     formModel.FullName = "Florian";
+        //     return Ok(this._formService.SaveXml(formModel));
         // }
 
         [HttpGet("save_xml")]
-        public IActionResult saveXml()
+        public IActionResult saveXml(string xml)
         { 
-            FormModel formModel = new FormModel();
-            formModel.FullName = "Florian";
-            return Ok(this._formService.SaveXml(formModel));
+            return Ok(this._formService.SaveXml(xml));
         }
 
         [HttpGet("valid_xsd")]

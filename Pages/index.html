@@ -7,17 +7,77 @@
   </head>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script>
+    var booksCount = 1;
+
     function add_book() {
+        booksCount = booksCount + 1;
         var btn = document.createElement("next_book");
-            btn.innerHTML = '<h2 class="header2">Kniha</h2><div class="row"><div class="form1"><label>Názov</label><input class="book_name" /></div><div class="form2"><label>Autor</label><input class="book_author" /></div></div ><div class="row"><div class="form1"><label>Žáner</label><input class="book_genre" /></div><div class="form2"><label>Dátum vypožičania</label><input class="book_reserve" /></div></div><div class="row"><div class="form1"><label>Dátum vrátenia</label><input class="book_return" /></div></div>';
+        btn.innerHTML = `<h2 class="header2">${booksCount}. Kniha</h2><div class="row"><div class="form1"><label>Názov</label><input class="book_name_${booksCount}" /></div><div class="form2"><label>Autor</label><input class="book_author_${booksCount}" /></div></div ><div class="row"><div class="form1"><label>Žáner</label><input class="book_genre_${booksCount}" /></div><div class="form2"><label>Dátum vypožičania</label><input class="book_reserve_${booksCount}" /></div></div><div class="row"><div class="form1"><label>Dátum vrátenia</label><input class="book_return_${booksCount}" /></div></div>`;
         document.getElementById("next_book").appendChild(btn);
     }
     function save_xml() {
-        // console.log(document.getElementById("firstName").value);
-        // console.log(document.getElementById("lastName").value);
-        // console.log(document.getElementById("email_customer").value);
-        // console.log(document.getElementById("date").value);
-        $.get("/api/save_xml", function (data) {
+        var xmlDoc = document.implementation.createDocument("namespaceURI", "registration", null);
+        
+        var personalInfoElem = xmlDoc.createElementNS("reg", "personal_info");
+            var first_name = xmlDoc.createElementNS("reg", "first_name");
+            first_name.innerHTML = document.getElementsByClassName("first_name")[0].value;
+            personalInfoElem.appendChild(first_name);
+            var last_name = xmlDoc.createElementNS("reg", "last_name");
+            last_name.innerHTML = document.getElementsByClassName("last_name")[0].value;
+            personalInfoElem.appendChild(last_name);
+            var email_customer = xmlDoc.createElementNS("reg", "email_customer");
+            email_customer.innerHTML = document.getElementsByClassName("email_customer")[0].value;
+            personalInfoElem.appendChild(email_customer);
+            var date = xmlDoc.createElementNS("reg", "date");
+            date.innerHTML = document.getElementsByClassName("date")[0].value;
+            personalInfoElem.appendChild(date);
+        xmlDoc.documentElement.appendChild(personalInfoElem);
+
+        var addressElem = xmlDoc.createElementNS("reg", "address");
+            var street = xmlDoc.createElementNS("reg", "street");
+            street.innerHTML = document.getElementsByClassName("street")[0].value;
+            addressElem.appendChild(street);
+            var adress_number = xmlDoc.createElementNS("reg", "adress_number");
+            adress_number.innerHTML = parseInt(document.getElementsByClassName("adress_number")[0].value);
+            addressElem.appendChild(adress_number);
+            var postal_code = xmlDoc.createElementNS("reg", "postal_code");
+            postal_code.innerHTML = parseInt(document.getElementsByClassName("postal_code")[0].value);
+            addressElem.appendChild(postal_code);
+            var town_customer = xmlDoc.createElementNS("reg", "town_customer");
+            town_customer.innerHTML = document.getElementsByClassName("town_customer")[0].value;
+            addressElem.appendChild(town_customer);
+            var country = xmlDoc.createElementNS("reg", "country");
+            country.innerHTML = document.getElementsByClassName("country")[0].value;
+            addressElem.appendChild(country);
+        xmlDoc.documentElement.appendChild(addressElem);
+
+        var booksElem = xmlDoc.createElementNS("reg", "books");
+        for (let i = 1; i <= booksCount; i++) {
+            var bookElem = xmlDoc.createElementNS("reg", "book");
+
+            var book_name = xmlDoc.createElementNS("reg", "book_name");
+            book_name.innerHTML = document.getElementsByClassName(`book_name_${i}`)[0].value;
+            bookElem.appendChild(book_name);
+            var book_author = xmlDoc.createElementNS("reg", "book_author");
+            book_author.innerHTML = document.getElementsByClassName(`book_author_${i}`)[0].value;
+            bookElem.appendChild(book_author);
+            var book_genre = xmlDoc.createElementNS("reg", "book_genre");
+            book_genre.innerHTML = document.getElementsByClassName(`book_genre_${i}`)[0].value;
+            bookElem.appendChild(book_genre);
+            var book_reserve = xmlDoc.createElementNS("reg", "book_reserve");
+            book_reserve.innerHTML = document.getElementsByClassName(`book_reserve_${i}`)[0].value;
+            bookElem.appendChild(book_reserve);
+            var book_return = xmlDoc.createElementNS("reg", "book_return");
+            book_return.innerHTML = document.getElementsByClassName(`book_return_${i}`)[0].value;
+            bookElem.appendChild(book_return);
+
+            booksElem.appendChild(bookElem);
+        } 
+        xmlDoc.documentElement.appendChild(booksElem);
+        console.log(xmlDoc);
+
+        var xmlText = new XMLSerializer().serializeToString(xmlDoc)
+        $.get(`/api/save_xml?xml=${xmlText}`, function (data) {
             alert(data);
         });
     }
@@ -45,11 +105,11 @@
           <div class="row">
               <div class="form1">
                   <label>Meno</label>
-                  <input class="firstName" />
+                  <input class="first_name" />
               </div>
               <div class="form2">
                   <label>Priezvisko</label>
-                  <input class="lastName" />
+                  <input class="last_name" />
               </div>
           </div>
           <div class="row">
@@ -76,7 +136,7 @@
           <div class="row">
               <div class="form1">
                   <label>PSČ</label>
-                  <input class="postal_Code" />
+                  <input class="postal_code" />
               </div>
               <div class="form2">
                   <label>Mesto</label>
@@ -86,34 +146,34 @@
           <div class="row">
               <div class="form1">
                   <label>Krajina</label>
-                  <input class="Country" />
+                  <input class="country" />
               </div>
           </div>
-          <h2 class="header2">Kniha</h2>
+          <h2 class="header2">1. Kniha</h2>
           <div class="row">
               <div class="form1">
                   <label>Názov</label>
-                  <input class="book_name" />
+                  <input class="book_name_1" />
               </div>
               <div class="form2">
                   <label>Autor</label>
-                  <input class="book_author" />
+                  <input class="book_author_1" />
               </div>
           </div>
           <div class="row">
               <div class="form1">
                   <label>Žáner</label>
-                  <input class="book_genre" />
+                  <input class="book_genre_1" />
               </div>
               <div class="form2">
                   <label>Dátum vypožičania</label>
-                  <input class="book_reserve" />
+                  <input class="book_reserve_1" />
               </div>
           </div>
           <div class="row">
               <div class="form1">
                   <label>Dátum vrátenia</label>
-                  <input class="book_return" />
+                  <input class="book_return_1" />
               </div>
           </div>
       </div>
