@@ -17,6 +17,7 @@
     }
     function save_xml() {
         var xmlDoc = document.implementation.createDocument("namespaceURI", "registration", null);
+        xmlDoc.documentElement.setAttribute("created", Date.now());
         
         var personalInfoElem = xmlDoc.createElementNS("reg", "personal_info");
             var first_name = xmlDoc.createElementNS("reg", "first_name");
