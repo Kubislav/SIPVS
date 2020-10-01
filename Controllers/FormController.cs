@@ -31,15 +31,15 @@ namespace SIPVS {
         }
 
         [HttpGet("valid_xsd")]
-        public IActionResult validXsd()
+        public IActionResult validXsd(string xml_file, string xsd_file)
         { 
-            return Ok(this._formService.ValidXsd());
+            return Ok(this._formService.ValidXsd(xml_file, xsd_file));
         }
 
         [HttpGet("save_html")]
-        public IActionResult saveHtml()
+        public IActionResult saveHtml(string xml_file, string xsl_file)
         { 
-            return Ok(this._formService.SaveHtml());
+            return Ok(this._formService.SaveHtml(xml_file, xsl_file));
         }
     }
 }

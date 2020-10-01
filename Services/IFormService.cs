@@ -4,7 +4,7 @@ public interface IFormService
 {
   public string SaveXml(string xml);
   
-  public string ValidXsd();
+  public string ValidXsd(string xml_file, string xsd_file);
 
-  public string SaveHtml();
+  public string SaveHtml(string xml_file, string xsl_file);
 }

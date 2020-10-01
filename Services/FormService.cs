@@ -18,19 +18,19 @@ namespace SIPVS
                 XDocument doc = XDocument.Parse(xml);
                 outputFile.WriteLine(doc.ToString());
             }
-            return fileName + " created!";
+            return fileName;
         }
 
-        public string ValidXsd()
+        public string ValidXsd(string xml_file, string xsd_file)
         {
-            System.Console.WriteLine("ValidXsd processed");
-            return "ValidXsd processed";
+            System.Console.WriteLine(xml_file + " and " + xsd_file);
+            return "xml not yet validated!";
         }
 
-        public string SaveHtml()
+        public string SaveHtml(string xml_file, string xsl_file)
         {
-            System.Console.WriteLine("SaveHtml processed");
-            return "SaveHtml processed";
+            System.Console.WriteLine(xml_file + " and " + xsl_file);
+            return "html not yet created!";
         }
     }
 }
