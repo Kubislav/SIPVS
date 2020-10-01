@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Formulár na knihy</title>
+		<title>Formulár - výpožička kníh</title>
 		<link rel="stylesheet" type="text/css" href="style.css" />
 	</head>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -12,7 +12,7 @@
 		function add_book() {
 			booksCount = booksCount + 1;
 			var btn = document.createElement("next_book");
-			btn.innerHTML = `<h2 class="header2">${booksCount}. Kniha</h2><div class="row"><div class="form1"><label>Názov</label><input class="book_name_${booksCount}" /></div><div class="form2"><label>Autor</label><input class="book_author_${booksCount}" /></div></div ><div class="row"><div class="form1"><label>Žáner</label><input class="book_genre_${booksCount}" /></div><div class="form2"><label>Dátum vypožičania</label><input class="book_reserve_${booksCount}" type="date"/></div></div><div class="row"><div class="form1"><label>Dátum vrátenia</label><input class="book_return_${booksCount}" type="date"/></div></div>`;
+			btn.innerHTML = '<h2 class="header2">' + booksCount + '. Kniha</h2><div class="row"><div class="form1"><label>Názov</label><input class="book_name_' + booksCount + '" /></div><div class="form2"><label>Autor</label><input class="book_author_' + booksCount + '" /></div></div ><div class="row"><div class="form1"><label>Žáner</label><input class="book_genre_' + booksCount + '" /></div><div class="form2"><label>Dátum vypožičania</label><input class="book_reserve_' + booksCount + '" type="date"/></div></div><div class="row"><div class="form1"><label>Dátum vrátenia</label><input class="book_return_' + booksCount + '" type="date"/></div></div>';
 			document.getElementById("next_book").appendChild(btn);
 		}
 		function save_xml() {
@@ -59,19 +59,19 @@
 				var bookElem = xmlDoc.createElement("tim2:book");
 
 				var book_name = xmlDoc.createElement("tim2:book_name");
-				book_name.innerHTML = document.getElementsByClassName(`book_name_${i}`)[0].value;
+				book_name.innerHTML = document.getElementsByClassName('book_name_' + i)[0].value;
 				bookElem.appendChild(book_name);
 				var book_author = xmlDoc.createElement("tim2:book_author");
-				book_author.innerHTML = document.getElementsByClassName(`book_author_${i}`)[0].value;
+				book_author.innerHTML = document.getElementsByClassName('book_author_' + i)[0].value;
 				bookElem.appendChild(book_author);
 				var book_genre = xmlDoc.createElement("tim2:book_genre");
-				book_genre.innerHTML = document.getElementsByClassName(`book_genre_${i}`)[0].value;
+				book_genre.innerHTML = document.getElementsByClassName('book_genre_' + i)[0].value;
 				bookElem.appendChild(book_genre);
 				var book_reserve = xmlDoc.createElement("tim2:book_reserve");
-				book_reserve.innerHTML = document.getElementsByClassName(`book_reserve_${i}`)[0].value;
+				book_reserve.innerHTML = document.getElementsByClassName('book_reserve_' + i)[0].value;
 				bookElem.appendChild(book_reserve);
 				var book_return = xmlDoc.createElement("tim2:book_return");
-				book_return.innerHTML = document.getElementsByClassName(`book_return_${i}`)[0].value;
+				book_return.innerHTML = document.getElementsByClassName('book_return_' + i)[0].value;
 				bookElem.appendChild(book_return);
 
 				booksElem.appendChild(bookElem);
@@ -80,7 +80,7 @@
 			console.log(xmlDoc);
 
 			var xmlText = new XMLSerializer().serializeToString(xmlDoc)
-			$.get(`/api/save_xml?xml=${xmlText}`, function (data) {
+			$.get('/api/save_xml?xml=' + xmlText, function (data) {
 				alert("bol vytvorený súbor: " + data);
 			});
 		}
@@ -89,7 +89,7 @@
 			try {
 				let xml_file = document.getElementsByClassName("xml_file")[0].files[0].name;
 				let xsd_file = document.getElementsByClassName("xsd_file")[0].files[0].name;
-				$.get(`/api/valid_xsd?xml_file=${xml_file}&xsd_file=${xsd_file}`, function (data) {
+				$.get('/api/valid_xsd?xml_file=' + xml_file + '&xsd_file=' + xsd_file, function (data) {
 					alert(data);
 				});
 			} catch(e) {
@@ -101,7 +101,7 @@
 			try {
 				let xml_file = document.getElementsByClassName("xml_file")[0].files[0].name;
 				let xsl_file = document.getElementsByClassName("xsl_file")[0].files[0].name;
-				$.get(`/api/save_html?xml_file=${xml_file}&xsl_file=${xsl_file}`, function (data) {
+				$.get('/api/save_html?xml_file=' + xml_file + '&xsl_file=' + xsl_file, function (data) {
 					console.log();
 					alert(data);
 				});
@@ -112,109 +112,111 @@
 	</script>
 
 	<body>
-		<section class="personal_info">
-			<div class="title">
-				<h1>Registračný formulár</h1>
-			</div>
-			<hr>
-			<div class="personal_form">
+		<div class="page">
+			<section class="personal_info">
+				<div class="title">
+					<h1>Registračný formulár</h1>
+				</div>
+				<hr>
+				<div class="personal_form">
 
-				<h2>Základné údaje</h2>
-				<div class="row">
-					<div class="form1">
-						<label>Meno</label>
-						<input class="first_name" />
+					<h2>Základné údaje</h2>
+					<div class="row">
+						<div class="form1">
+							<label>Meno</label>
+							<input class="first_name" />
+						</div>
+						<div class="form2">
+							<label>Priezvisko</label>
+							<input class="last_name" />
+						</div>
 					</div>
-					<div class="form2">
-						<label>Priezvisko</label>
-						<input class="last_name" />
+					<div class="row">
+						<div class="form1">
+							<label>E-mail</label>
+							<input class="email_customer" />
+						</div>
+						<div class="form2">
+							<label>Dátum narodenia</label>
+							<input class="date" type="date" />
+						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="form1">
-						<label>E-mail</label>
-						<input class="email_customer" />
-					</div>
-					<div class="form2">
-						<label>Dátum narodenia</label>
-						<input class="date" type="date" />
-					</div>
-				</div>
 
-				<h2>Adresa</h2>
-				<div class="row">
-					<div class="form1">
-						<label>Ulica</label>
-						<input class="street" />
+					<h2>Adresa</h2>
+					<div class="row">
+						<div class="form1">
+							<label>Ulica</label>
+							<input class="street" />
+						</div>
+						<div class="form2">
+							<label>Číslo ulice</label>
+							<input class="adress_number" />
+						</div>
 					</div>
-					<div class="form2">
-						<label>Číslo ulice</label>
-						<input class="adress_number" />
+					<div class="row">
+						<div class="form1">
+							<label>PSČ</label>
+							<input class="postal_code" />
+						</div>
+						<div class="form2">
+							<label>Mesto</label>
+							<input class="town_customer" />
+						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="form1">
-						<label>PSČ</label>
-						<input class="postal_code" />
+					<div class="row">
+						<div class="form1">
+							<label>Krajina</label>
+							<input class="country" />
+						</div>
 					</div>
-					<div class="form2">
-						<label>Mesto</label>
-						<input class="town_customer" />
-					</div>
-				</div>
-				<div class="row">
-					<div class="form1">
-						<label>Krajina</label>
-						<input class="country" />
-					</div>
-				</div>
 
-				<h2 class="header2">1. Kniha</h2>
-				<div class="row">
-					<div class="form1">
-						<label>Názov</label>
-						<input class="book_name_1" />
+					<h2 class="header2">1. Kniha</h2>
+					<div class="row">
+						<div class="form1">
+							<label>Názov</label>
+							<input class="book_name_1" />
+						</div>
+						<div class="form2">
+							<label>Autor</label>
+							<input class="book_author_1" />
+						</div>
 					</div>
-					<div class="form2">
-						<label>Autor</label>
-						<input class="book_author_1" />
+					<div class="row">
+						<div class="form1">
+							<label>Žáner</label>
+							<input class="book_genre_1" />
+						</div>
+						<div class="form2">
+							<label>Dátum vypožičania</label>
+							<input class="book_reserve_1" type="date" />
+						</div>
+					</div>
+					<div class="row">
+						<div class="form1">
+							<label>Dátum vrátenia</label>
+							<input class="book_return_1" type="date" />
+						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="form1">
-						<label>Žáner</label>
-						<input class="book_genre_1" />
-					</div>
-					<div class="form2">
-						<label>Dátum vypožičania</label>
-						<input class="book_reserve_1" type="date" />
-					</div>
+				<div id="next_book"></div>
+			</section>
+			
+			<section class="buttons">
+				<div class="first_button">
+					<button class="add_book" onclick="add_book()">Pridat knihu</button>
+					<button class="save_xml" onclick="save_xml()">Uložiť XML</button>
+					<button class="valid_xsd" onclick="valid_xsd()">Validácia XSD</button>
+					<button class="save_html" onclick="save_html()">Uložiť HTML</button>
 				</div>
-				<div class="row">
-					<div class="form1">
-						<label>Dátum vrátenia</label>
-						<input class="book_return_1" type="date" />
-					</div>
+				<div class="files">
+					<label for="xml_file">vyberte XML súbor:</label>
+					<input type="file" class="xml_file"> <br>
+					<label for="xsd_file">vyberte XSD súbor:</label>
+					<input type="file" class="xsd_file"> <br>
+					<label for="xsl_file">vyberte XSL súbor:</label>
+					<input type="file" class="xsl_file"> <br>
 				</div>
-			</div>
-		</section>
-
-		<div id="next_book"></div>
-		<section class="buttons">
-			<div class="first_button">
-				<button class="add_book" onclick="add_book()">Pridat knihu</button>
-				<button class="save_xml" onclick="save_xml()">Uložiť XML</button>
-				<button class="valid_xsd" onclick="valid_xsd()">Validácia XSD</button>
-				<button class="save_html" onclick="save_html()">Uložiť HTML</button>
-			</div>
-			<div class="files">
-				<label for="xml_file">vyberte XML súbor:</label>
-				<input type="file" class="xml_file"> <br>
-				<label for="xsd_file">vyberte XSD súbor:</label>
-				<input type="file" class="xsd_file"> <br>
-				<label for="xsl_file">vyberte XSL súbor:</label>
-				<input type="file" class="xsl_file"> <br>
-			</div>
-		</section>
+			</section>		
+		</div>
 	</body>
 </html>
