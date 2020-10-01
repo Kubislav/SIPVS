@@ -11,8 +11,8 @@ namespace SIPVS
     {
         public string SaveXml(string xml)
         {
-            string fileName = DateTime.Now.ToString("yyyy-MM-dd_HH:mm:ss") + "_file.xml";
-            using (StreamWriter outputFile = new StreamWriter(Path.Combine(Directory.GetCurrentDirectory(), fileName)))
+            string fileName = DateTime.Now.ToString("yyyy-MM-dd_HHmmss") + "_file.xml";
+            using (StreamWriter outputFile = new StreamWriter(Path.Combine("./Data/", fileName)))
             {
                 outputFile.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                 XDocument doc = XDocument.Parse(xml);
