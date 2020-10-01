@@ -1,212 +1,220 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Formulár na knihy</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
-  </head>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script>
-    var booksCount = 1;
+	<head>
+		<meta charset="UTF-8">
+		<title>Formulár na knihy</title>
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script>
+		var booksCount = 1;
 
-    function add_book() {
-        booksCount = booksCount + 1;
-        var btn = document.createElement("next_book");
-        btn.innerHTML = `<h2 class="header2">${booksCount}. Kniha</h2><div class="row"><div class="form1"><label>Názov</label><input class="book_name_${booksCount}" /></div><div class="form2"><label>Autor</label><input class="book_author_${booksCount}" /></div></div ><div class="row"><div class="form1"><label>Žáner</label><input class="book_genre_${booksCount}" /></div><div class="form2"><label>Dátum vypožičania</label><input class="book_reserve_${booksCount}" type="date"/></div></div><div class="row"><div class="form1"><label>Dátum vrátenia</label><input class="book_return_${booksCount}" type="date"/></div></div>`;
-        document.getElementById("next_book").appendChild(btn);
-    }
-    function save_xml() {
-        var xmlDoc = document.implementation.createDocument("namespaceURI", "registration", null);
-        
-        var personalInfoElem = xmlDoc.createElementNS("reg", "personal_info");
-            var first_name = xmlDoc.createElementNS("reg", "first_name");
-            first_name.innerHTML = document.getElementsByClassName("first_name")[0].value;
-            personalInfoElem.appendChild(first_name);
-            var last_name = xmlDoc.createElementNS("reg", "last_name");
-            last_name.innerHTML = document.getElementsByClassName("last_name")[0].value;
-            personalInfoElem.appendChild(last_name);
-            var email_customer = xmlDoc.createElementNS("reg", "email_customer");
-            email_customer.innerHTML = document.getElementsByClassName("email_customer")[0].value;
-            personalInfoElem.appendChild(email_customer);
-            var date = xmlDoc.createElementNS("reg", "date");
-            date.innerHTML = document.getElementsByClassName("date")[0].value;
-            personalInfoElem.appendChild(date);
-        xmlDoc.documentElement.appendChild(personalInfoElem);
+		function add_book() {
+			booksCount = booksCount + 1;
+			var btn = document.createElement("next_book");
+			btn.innerHTML = `<h2 class="header2">${booksCount}. Kniha</h2><div class="row"><div class="form1"><label>Názov</label><input class="book_name_${booksCount}" /></div><div class="form2"><label>Autor</label><input class="book_author_${booksCount}" /></div></div ><div class="row"><div class="form1"><label>Žáner</label><input class="book_genre_${booksCount}" /></div><div class="form2"><label>Dátum vypožičania</label><input class="book_reserve_${booksCount}" type="date"/></div></div><div class="row"><div class="form1"><label>Dátum vrátenia</label><input class="book_return_${booksCount}" type="date"/></div></div>`;
+			document.getElementById("next_book").appendChild(btn);
+		}
+		function save_xml() {
+			var xmlDoc = document.implementation.createDocument(null, "registration", null);
+			xmlDoc.documentElement.setAttribute("created", Date.now());
+			xmlDoc.documentElement.setAttribute("xmlns:tim2", "http://www.w3.org/2001/XMLSchema");
 
-        var addressElem = xmlDoc.createElementNS("reg", "address");
-            var street = xmlDoc.createElementNS("reg", "street");
-            street.innerHTML = document.getElementsByClassName("street")[0].value;
-            addressElem.appendChild(street);
-            var adress_number = xmlDoc.createElementNS("reg", "adress_number");
-            adress_number.innerHTML = parseInt(document.getElementsByClassName("adress_number")[0].value);
-            addressElem.appendChild(adress_number);
-            var postal_code = xmlDoc.createElementNS("reg", "postal_code");
-            postal_code.innerHTML = parseInt(document.getElementsByClassName("postal_code")[0].value);
-            addressElem.appendChild(postal_code);
-            var town_customer = xmlDoc.createElementNS("reg", "town_customer");
-            town_customer.innerHTML = document.getElementsByClassName("town_customer")[0].value;
-            addressElem.appendChild(town_customer);
-            var country = xmlDoc.createElementNS("reg", "country");
-            country.innerHTML = document.getElementsByClassName("country")[0].value;
-            addressElem.appendChild(country);
-        xmlDoc.documentElement.appendChild(addressElem);
 
-        var booksElem = xmlDoc.createElementNS("reg", "books");
-        for (let i = 1; i <= booksCount; i++) {
-            var bookElem = xmlDoc.createElementNS("reg", "book");
+			var personalInfoElem = xmlDoc.createElement("tim2:personal_info");
+				var first_name = xmlDoc.createElement("tim2:first_name");
+				first_name.innerHTML = document.getElementsByClassName("first_name")[0].value;
+				personalInfoElem.appendChild(first_name);
+				var last_name = xmlDoc.createElement("tim2:last_name");
+				last_name.innerHTML = document.getElementsByClassName("last_name")[0].value;
+				personalInfoElem.appendChild(last_name);
+				var email_customer = xmlDoc.createElement("tim2:email_customer");
+				email_customer.innerHTML = document.getElementsByClassName("email_customer")[0].value;
+				personalInfoElem.appendChild(email_customer);
+				var date = xmlDoc.createElement("tim2:date");
+				date.innerHTML = document.getElementsByClassName("date")[0].value;
+				personalInfoElem.appendChild(date);
+			xmlDoc.documentElement.appendChild(personalInfoElem);
 
-            var book_name = xmlDoc.createElementNS("reg", "book_name");
-            book_name.innerHTML = document.getElementsByClassName(`book_name_${i}`)[0].value;
-            bookElem.appendChild(book_name);
-            var book_author = xmlDoc.createElementNS("reg", "book_author");
-            book_author.innerHTML = document.getElementsByClassName(`book_author_${i}`)[0].value;
-            bookElem.appendChild(book_author);
-            var book_genre = xmlDoc.createElementNS("reg", "book_genre");
-            book_genre.innerHTML = document.getElementsByClassName(`book_genre_${i}`)[0].value;
-            bookElem.appendChild(book_genre);
-            var book_reserve = xmlDoc.createElementNS("reg", "book_reserve");
-            book_reserve.innerHTML = document.getElementsByClassName(`book_reserve_${i}`)[0].value;
-            bookElem.appendChild(book_reserve);
-            var book_return = xmlDoc.createElementNS("reg", "book_return");
-            book_return.innerHTML = document.getElementsByClassName(`book_return_${i}`)[0].value;
-            bookElem.appendChild(book_return);
+			var addressElem = xmlDoc.createElement("tim2:address");
+				var street = xmlDoc.createElement("tim2:street");
+				street.innerHTML = document.getElementsByClassName("street")[0].value;
+				addressElem.appendChild(street);
+				var adress_number = xmlDoc.createElement("tim2:adress_number");
+				adress_number.innerHTML = parseInt(document.getElementsByClassName("adress_number")[0].value);
+				addressElem.appendChild(adress_number);
+				var postal_code = xmlDoc.createElement("tim2:postal_code");
+				postal_code.innerHTML = parseInt(document.getElementsByClassName("postal_code")[0].value);
+				addressElem.appendChild(postal_code);
+				var town_customer = xmlDoc.createElement("tim2:town_customer");
+				town_customer.innerHTML = document.getElementsByClassName("town_customer")[0].value;
+				addressElem.appendChild(town_customer);
+				var country = xmlDoc.createElement("tim2:country");
+				country.innerHTML = document.getElementsByClassName("country")[0].value;
+				addressElem.appendChild(country);
+			xmlDoc.documentElement.appendChild(addressElem);
 
-            booksElem.appendChild(bookElem);
-        } 
-        xmlDoc.documentElement.appendChild(booksElem);
-        console.log(xmlDoc);
+			var booksElem = xmlDoc.createElement("tim2:books");
+			for (let i = 1; i <= booksCount; i++) {
+				var bookElem = xmlDoc.createElement("tim2:book");
 
-        var xmlText = new XMLSerializer().serializeToString(xmlDoc)
-        $.get(`/api/save_xml?xml=${xmlText}`, function (data) {
-            alert("bol vytvorený súbor: " + data);
-        });
-    }
+				var book_name = xmlDoc.createElement("tim2:book_name");
+				book_name.innerHTML = document.getElementsByClassName(`book_name_${i}`)[0].value;
+				bookElem.appendChild(book_name);
+				var book_author = xmlDoc.createElement("tim2:book_author");
+				book_author.innerHTML = document.getElementsByClassName(`book_author_${i}`)[0].value;
+				bookElem.appendChild(book_author);
+				var book_genre = xmlDoc.createElement("tim2:book_genre");
+				book_genre.innerHTML = document.getElementsByClassName(`book_genre_${i}`)[0].value;
+				bookElem.appendChild(book_genre);
+				var book_reserve = xmlDoc.createElement("tim2:book_reserve");
+				book_reserve.innerHTML = document.getElementsByClassName(`book_reserve_${i}`)[0].value;
+				bookElem.appendChild(book_reserve);
+				var book_return = xmlDoc.createElement("tim2:book_return");
+				book_return.innerHTML = document.getElementsByClassName(`book_return_${i}`)[0].value;
+				bookElem.appendChild(book_return);
 
-    function valid_xsd() {
-        try {
-            let xml_file = document.getElementsByClassName("xml_file")[0].files[0].name;
-            let xsd_file = document.getElementsByClassName("xsd_file")[0].files[0].name;
-            $.get(`/api/valid_xsd?xml_file=${xml_file}&xsd_file=${xsd_file}`, function (data) {
-                alert(data);
-            });    
-        } catch(e) {
-            alert("vyberte XML a XSD súbory!");
-        }
-    }
+				booksElem.appendChild(bookElem);
+			}
+			xmlDoc.documentElement.appendChild(booksElem);
+			console.log(xmlDoc);
 
-    function save_html() {
-        try {
-            let xml_file = document.getElementsByClassName("xml_file")[0].files[0].name;
-            let xsl_file = document.getElementsByClassName("xsl_file")[0].files[0].name;
-            $.get(`/api/save_html?xml_file=${xml_file}&xsl_file=${xsl_file}`, function (data) {
-                console.log();
-                alert(data);
-            });    
-        } catch(e) {
-            alert("vyberte XML a XSL súbory!");
-        }
-    }
-</script>
-  <body>
-    <section class="personal_info">
-      <div class="title">
-          <h1>Registračný formulár</h1>
-      </div>
-      <hr>
-      <div class="personal_form">
-          <h2>Základné údaje</h2>
-          <div class="row">
-              <div class="form1">
-                  <label>Meno</label>
-                  <input class="first_name" />
-              </div>
-              <div class="form2">
-                  <label>Priezvisko</label>
-                  <input class="last_name" />
-              </div>
-          </div>
-          <div class="row">
-              <div class="form1">
-                  <label>E-mail</label>
-                  <input class="email_customer" />
-              </div>
-              <div class="form2">
-                  <label>Dátum narodenia</label>
-                  <input class="date" type="date" />
-              </div>
-          </div>
-          <h2>Adresa</h2>
-          <div class="row">
-              <div class="form1">
-                  <label>Ulica</label>
-                  <input class="street" />
-              </div>
-              <div class="form2">
-                  <label>Číslo ulice</label>
-                  <input class="adress_number" />
-              </div>
-          </div>
-          <div class="row">
-              <div class="form1">
-                  <label>PSČ</label>
-                  <input class="postal_code" />
-              </div>
-              <div class="form2">
-                  <label>Mesto</label>
-                  <input class="town_customer" />
-              </div>
-          </div>
-          <div class="row">
-              <div class="form1">
-                  <label>Krajina</label>
-                  <input class="country" />
-              </div>
-          </div>
-          <h2 class="header2">1. Kniha</h2>
-          <div class="row">
-              <div class="form1">
-                  <label>Názov</label>
-                  <input class="book_name_1" />
-              </div>
-              <div class="form2">
-                  <label>Autor</label>
-                  <input class="book_author_1" />
-              </div>
-          </div>
-          <div class="row">
-              <div class="form1">
-                  <label>Žáner</label>
-                  <input class="book_genre_1" />
-              </div>
-              <div class="form2">
-                  <label>Dátum vypožičania</label>
-                  <input class="book_reserve_1" type="date" />
-              </div>
-          </div>
-          <div class="row">
-              <div class="form1">
-                  <label>Dátum vrátenia</label>
-                  <input class="book_return_1" type="date" />
-              </div>
-          </div>
-      </div>
-  </section>
-  
-  <div id="next_book"></div>
-  <section class="buttons">
-      <div class="first_button">
-          <button class="add_book" onclick="add_book()">Pridat knihu</button>
-          <button class="save_xml" onclick="save_xml()">Uložiť XML</button>
-          <button class="valid_xsd" onclick="valid_xsd()">Validácia XSD</button>
-          <button class="save_html" onclick="save_html()">Uložiť HTML</button>
-      </div>
-    <div class="files">
-        <label for="xml_file">vyberte XML súbor:</label>
-        <input type="file" class="xml_file"> <br>
-        <label for="xsd_file">vyberte XSD súbor:</label>
-        <input type="file" class="xsd_file"> <br>
-        <label for="xsl_file">vyberte XSL súbor:</label>
-        <input type="file" class="xsl_file"> <br>
-    </div>
-  </section>  </body>
+			var xmlText = new XMLSerializer().serializeToString(xmlDoc)
+			$.get(`/api/save_xml?xml=${xmlText}`, function (data) {
+				alert("bol vytvorený súbor: " + data);
+			});
+		}
+
+		function valid_xsd() {
+			try {
+				let xml_file = document.getElementsByClassName("xml_file")[0].files[0].name;
+				let xsd_file = document.getElementsByClassName("xsd_file")[0].files[0].name;
+				$.get(`/api/valid_xsd?xml_file=${xml_file}&xsd_file=${xsd_file}`, function (data) {
+					alert(data);
+				});
+			} catch(e) {
+				alert("vyberte XML a XSD súbory!");
+			}
+		}
+
+		function save_html() {
+			try {
+				let xml_file = document.getElementsByClassName("xml_file")[0].files[0].name;
+				let xsl_file = document.getElementsByClassName("xsl_file")[0].files[0].name;
+				$.get(`/api/save_html?xml_file=${xml_file}&xsl_file=${xsl_file}`, function (data) {
+					console.log();
+					alert(data);
+				});
+			} catch(e) {
+				alert("vyberte XML a XSL súbory!");
+			}
+		}
+	</script>
+
+	<body>
+		<section class="personal_info">
+			<div class="title">
+				<h1>Registračný formulár</h1>
+			</div>
+			<hr>
+			<div class="personal_form">
+
+				<h2>Základné údaje</h2>
+				<div class="row">
+					<div class="form1">
+						<label>Meno</label>
+						<input class="first_name" />
+					</div>
+					<div class="form2">
+						<label>Priezvisko</label>
+						<input class="last_name" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="form1">
+						<label>E-mail</label>
+						<input class="email_customer" />
+					</div>
+					<div class="form2">
+						<label>Dátum narodenia</label>
+						<input class="date" type="date" />
+					</div>
+				</div>
+
+				<h2>Adresa</h2>
+				<div class="row">
+					<div class="form1">
+						<label>Ulica</label>
+						<input class="street" />
+					</div>
+					<div class="form2">
+						<label>Číslo ulice</label>
+						<input class="adress_number" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="form1">
+						<label>PSČ</label>
+						<input class="postal_code" />
+					</div>
+					<div class="form2">
+						<label>Mesto</label>
+						<input class="town_customer" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="form1">
+						<label>Krajina</label>
+						<input class="country" />
+					</div>
+				</div>
+
+				<h2 class="header2">1. Kniha</h2>
+				<div class="row">
+					<div class="form1">
+						<label>Názov</label>
+						<input class="book_name_1" />
+					</div>
+					<div class="form2">
+						<label>Autor</label>
+						<input class="book_author_1" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="form1">
+						<label>Žáner</label>
+						<input class="book_genre_1" />
+					</div>
+					<div class="form2">
+						<label>Dátum vypožičania</label>
+						<input class="book_reserve_1" type="date" />
+					</div>
+				</div>
+				<div class="row">
+					<div class="form1">
+						<label>Dátum vrátenia</label>
+						<input class="book_return_1" type="date" />
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<div id="next_book"></div>
+		<section class="buttons">
+			<div class="first_button">
+				<button class="add_book" onclick="add_book()">Pridat knihu</button>
+				<button class="save_xml" onclick="save_xml()">Uložiť XML</button>
+				<button class="valid_xsd" onclick="valid_xsd()">Validácia XSD</button>
+				<button class="save_html" onclick="save_html()">Uložiť HTML</button>
+			</div>
+			<div class="files">
+				<label for="xml_file">vyberte XML súbor:</label>
+				<input type="file" class="xml_file"> <br>
+				<label for="xsd_file">vyberte XSD súbor:</label>
+				<input type="file" class="xsd_file"> <br>
+				<label for="xsl_file">vyberte XSL súbor:</label>
+				<input type="file" class="xsl_file"> <br>
+			</div>
+		</section>
+	</body>
 </html>
