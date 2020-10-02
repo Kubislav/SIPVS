@@ -1,4 +1,4 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
 /*
@@ -146,8 +146,19 @@ input {
 
 .first_button {
     margin-left: 20%;
-    width: 50%;
-    margin-bottom: 5%;
+    width: 70%;
+    margin-bottom: 2%;
+}
+
+.files{
+	margin-left: 25%;
+    float: left;
+    width: 70%;
+	margin-bottom: 2%;
+}
+
+.xml_file, .xsd_file, .xsl_file{
+	width: 30%;
 }
 
 button {
@@ -157,8 +168,8 @@ button {
     background-color: #C0C0C0;
 }
 
-    button:hover {
-        background-color: #4CAF50;
-        color: white;
-    }
+button:hover {
+     background-color: #4CAF50;
+     color: white;
+ }
 
