@@ -6,6 +6,7 @@ using System.IO;
 using System.Xml.Linq;
 using System.Xml;
 using System.Xml.Schema;
+using System.Xml.Xsl;
 
 namespace SIPVS
 {
@@ -75,8 +76,23 @@ namespace SIPVS
 
         public string SaveHtml(string xml_file, string xsl_file)
         {
+
+
+            // Load the style sheet.
+            XslCompiledTransform xslt = new XslCompiledTransform();
+            xslt.Load("./Data/" + xsl_file);
+
+            string[] stringToSplit = xml_file.Split('.');
+            string fileName = stringToSplit[0] + ".html";
+ 
+            // Execute the transform and output the results to a file.
+            xslt.Transform("./Data/" + xml_file, "./Data/" + fileName);
+
             System.Console.WriteLine(xml_file + " and " + xsl_file);
-            return "html not yet created!";
+            //return "html not yet created!";
+
+            return fileName + "Úspešne vytvorený!";
+            
         }
     }
 }

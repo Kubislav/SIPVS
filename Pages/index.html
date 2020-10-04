@@ -16,75 +16,85 @@
 			document.getElementById("next_book").appendChild(btn);
 		}
 		function save_xml() {
-			var xmlDoc = document.implementation.createDocument("", "", null);
-			var r = xmlDoc.createElement("tim2:registration");
-			xmlDoc.appendChild(r);
-			xmlDoc.documentElement.setAttribute("created", Math.floor(Math.random()*90000) + 10000);
-			xmlDoc.documentElement.setAttribute("xmlns:tim2", "http://www.w3.org");
-
-			var personalInfoElem = xmlDoc.createElement("tim2:personal_info");
-			var first_name = xmlDoc.createElement("tim2:first_name");
-			first_name.innerHTML = document.getElementsByClassName("first_name")[0].value;
-			personalInfoElem.appendChild(first_name);
-			var last_name = xmlDoc.createElement("tim2:last_name");
-			last_name.innerHTML = document.getElementsByClassName("last_name")[0].value;
-			personalInfoElem.appendChild(last_name);
-			var email_customer = xmlDoc.createElement("tim2:email_customer");
-			email_customer.innerHTML = document.getElementsByClassName("email_customer")[0].value;
-			personalInfoElem.appendChild(email_customer);
-			var date = xmlDoc.createElement("tim2:date");
-			date.innerHTML = document.getElementsByClassName("date")[0].value;
-			personalInfoElem.appendChild(date);
-			xmlDoc.documentElement.appendChild(personalInfoElem);
-
-			var addressElem = xmlDoc.createElement("tim2:address");
-			var street = xmlDoc.createElement("tim2:street");
-			street.innerHTML = document.getElementsByClassName("street")[0].value;
-			addressElem.appendChild(street);
-			var adress_number = xmlDoc.createElement("tim2:adress_number");
-			adress_number.innerHTML = parseInt(document.getElementsByClassName("adress_number")[0].value);
-			addressElem.appendChild(adress_number);
-			var postal_code = xmlDoc.createElement("tim2:postal_code");
-			postal_code.innerHTML = parseInt(document.getElementsByClassName("postal_code")[0].value);
-			addressElem.appendChild(postal_code);
-			var town_customer = xmlDoc.createElement("tim2:town_customer");
-			town_customer.innerHTML = document.getElementsByClassName("town_customer")[0].value;
-			addressElem.appendChild(town_customer);
-			var country = xmlDoc.createElement("tim2:country");
-			country.innerHTML = document.getElementsByClassName("country")[0].value;
-			addressElem.appendChild(country);
-			xmlDoc.documentElement.appendChild(addressElem);
-
-			var booksElem = xmlDoc.createElement("tim2:books");
-			for (let i = 1; i <= booksCount; i++) {
-				var bookElem = xmlDoc.createElement("tim2:book");
-
-				var book_name = xmlDoc.createElement("tim2:book_name");
-				book_name.innerHTML = document.getElementsByClassName('book_name_' + i)[0].value;
-				bookElem.appendChild(book_name);
-				var book_author = xmlDoc.createElement("tim2:book_author");
-				book_author.innerHTML = document.getElementsByClassName('book_author_' + i)[0].value;
-				bookElem.appendChild(book_author);
-				var book_genre = xmlDoc.createElement("tim2:book_genre");
-				book_genre.innerHTML = document.getElementsByClassName('book_genre_' + i)[0].value;
-				bookElem.appendChild(book_genre);
-				var book_reserve = xmlDoc.createElement("tim2:book_reserve");
-				book_reserve.innerHTML = document.getElementsByClassName('book_reserve_' + i)[0].value;
-				bookElem.appendChild(book_reserve);
-				var book_return = xmlDoc.createElement("tim2:book_return");
-				book_return.innerHTML = document.getElementsByClassName('book_return_' + i)[0].value;
-				bookElem.appendChild(book_return);
-
-				booksElem.appendChild(bookElem);
-			}
-			xmlDoc.documentElement.appendChild(booksElem);
+		
+			if(check_empty_inputs()){
 			
-			console.log(xmlDoc);
+				
+			
+				var xmlDoc = document.implementation.createDocument("", "", null);
+				var r = xmlDoc.createElement("tim2:registration");
+				xmlDoc.appendChild(r);
+				xmlDoc.documentElement.setAttribute("created", Math.floor(Math.random()*90000) + 10000);
+				xmlDoc.documentElement.setAttribute("xmlns:tim2", "http://www.w3.org");
 
-			var xmlText = new XMLSerializer().serializeToString(xmlDoc)
-			$.get('/api/save_xml?xml=' + xmlText, function (data) {
-				alert("bol vytvorený súbor: " + data);
-			});
+				var personalInfoElem = xmlDoc.createElement("tim2:personal_info");
+				var first_name = xmlDoc.createElement("tim2:first_name");
+				first_name.innerHTML = document.getElementsByClassName("first_name")[0].value;
+				personalInfoElem.appendChild(first_name);
+				var last_name = xmlDoc.createElement("tim2:last_name");
+				last_name.innerHTML = document.getElementsByClassName("last_name")[0].value;
+				personalInfoElem.appendChild(last_name);
+				var email_customer = xmlDoc.createElement("tim2:email_customer");
+				email_customer.innerHTML = document.getElementsByClassName("email_customer")[0].value;
+				personalInfoElem.appendChild(email_customer);
+				var date = xmlDoc.createElement("tim2:date");
+				date.innerHTML = document.getElementsByClassName("date")[0].value;
+				personalInfoElem.appendChild(date);
+				xmlDoc.documentElement.appendChild(personalInfoElem);
+
+				var addressElem = xmlDoc.createElement("tim2:address");
+				var street = xmlDoc.createElement("tim2:street");
+				street.innerHTML = document.getElementsByClassName("street")[0].value;
+				addressElem.appendChild(street);
+				var adress_number = xmlDoc.createElement("tim2:adress_number");
+				adress_number.innerHTML = parseInt(document.getElementsByClassName("adress_number")[0].value);
+				addressElem.appendChild(adress_number);
+				var postal_code = xmlDoc.createElement("tim2:postal_code");
+				postal_code.innerHTML = parseInt(document.getElementsByClassName("postal_code")[0].value);
+				addressElem.appendChild(postal_code);
+				var town_customer = xmlDoc.createElement("tim2:town_customer");
+				town_customer.innerHTML = document.getElementsByClassName("town_customer")[0].value;
+				addressElem.appendChild(town_customer);
+				var country = xmlDoc.createElement("tim2:country");
+				country.innerHTML = document.getElementsByClassName("country")[0].value;
+				addressElem.appendChild(country);
+				xmlDoc.documentElement.appendChild(addressElem);
+
+				var booksElem = xmlDoc.createElement("tim2:books");
+				for (let i = 1; i <= booksCount; i++) {
+					var bookElem = xmlDoc.createElement("tim2:book");
+
+					var book_name = xmlDoc.createElement("tim2:book_name");
+					book_name.innerHTML = document.getElementsByClassName('book_name_' + i)[0].value;
+					bookElem.appendChild(book_name);
+					var book_author = xmlDoc.createElement("tim2:book_author");
+					book_author.innerHTML = document.getElementsByClassName('book_author_' + i)[0].value;
+					bookElem.appendChild(book_author);
+					var book_genre = xmlDoc.createElement("tim2:book_genre");
+					book_genre.innerHTML = document.getElementsByClassName('book_genre_' + i)[0].value;
+					bookElem.appendChild(book_genre);
+					var book_reserve = xmlDoc.createElement("tim2:book_reserve");
+					book_reserve.innerHTML = document.getElementsByClassName('book_reserve_' + i)[0].value;
+					bookElem.appendChild(book_reserve);
+					var book_return = xmlDoc.createElement("tim2:book_return");
+					book_return.innerHTML = document.getElementsByClassName('book_return_' + i)[0].value;
+					bookElem.appendChild(book_return);
+
+					booksElem.appendChild(bookElem);
+				}
+				xmlDoc.documentElement.appendChild(booksElem);
+				
+				console.log(xmlDoc);
+
+				var xmlText = new XMLSerializer().serializeToString(xmlDoc)
+				$.get('/api/save_xml?xml=' + xmlText, function (data) {
+					alert("bol vytvorený súbor: " + data);
+				});
+			}
+			else{
+			
+				alert("Vyplnte vsetky policka!");
+			}
 			
 		}
 
@@ -111,6 +121,18 @@
 			} catch (e) {
 				alert("vyberte XML a XSL súbory!");
 			}
+		}
+		
+		function check_empty_inputs(){
+			var allEmpty = true;
+				$(':input').each(function() {
+					if ($(this).val() === '') {
+						allEmpty = false;
+						return false;
+					}
+				});
+
+				return allEmpty;
 		}
 		
 		function validate_number(evt) {
