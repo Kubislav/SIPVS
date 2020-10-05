@@ -25,23 +25,20 @@
           }
 
           h2 {
-              margin-left: 20%;
-              margin-top: 3%;
-              margin-bottom: 1%;
+              margin-top: 40px;
+              margin-bottom: 20px;
               font-size: 2rem
           }
 
           .header2 {
-              margin-left: 20%;
-              margin-top: 6%;
-              margin-bottom: 1%;
+              margin-top: 100px;
+              margin-bottom: 20px;
               font-size: 2rem
           }
 
           .title {
-              text-align: center;
-              margin-top: 2%;
-              margin-bottom: 2%;
+              width: 700px;
+              margin: 45px auto;
           }
 
           hr {
@@ -53,7 +50,13 @@
               width: 700px;
               margin-right: auto;
               margin-left: auto;
-              margin-bottom: 10px;
+              margin-bottom: 15px;
+          }
+		  
+		 .h2-row {
+              width: 800px;
+              margin-right: auto;
+              margin-left: auto;
           }
 
           .form1 {
@@ -71,24 +74,25 @@
           }
 
           input {
-              width: 220px;
+              width: 250px;
           }
 
           .buttons {
-              margin-top: 5%;
+              margin-top: 100px;
           }
 
           .first_button {
-              margin-left: 20%;
-              width: 70%;
-              margin-bottom: 2%;
+              width: 700px;
+              margin-right: auto;
+              margin-left: auto;
           }
 
           .files{
-            margin-left: 25%;
-              float: left;
-              width: 70%;
-            margin-bottom: 2%;
+				margin-left: auto;
+				margin-right: auto;
+				width: 700px;
+				margin-bottom: 70px;
+				margin-top: 30px;
           }
 
           .xml_file, .xsd_file, .xsl_file{
@@ -116,12 +120,12 @@
 		<div class="page">
 			<section class="personal_info">
 				<div class="title">
-					<h1>Vypožičanie kníh</h1>
+					<h1>Vypožičanie kníh - záznam</h1>
 				</div>
 				<hr></hr>
 				<div class="personal_form">
 
-					<h2>Základné údaje</h2>
+					<div class="h2-row"><h2>Základné údaje</h2></div>
 					<div class="row">
 						<div class="form1">
 							<span><b>Meno: </b></span>
@@ -143,7 +147,7 @@
 						</div>
 					</div>
 
-					<h2>Adresa</h2>
+					<div class="h2-row"><h2>Adresa</h2></div>
 					<div class="row">
 						<div class="form1">
 							<span><b>Ulica: </b></span>
@@ -171,7 +175,7 @@
 						</div>
 					</div>
 
-					<h2>Knihy</h2>
+					<div class="h2-row"><h2 class="header2">Knihy</h2></div>
 					<xsl:for-each select="tim2:books/tim2:book">
 
 						<div class="book-area">

@@ -89,23 +89,20 @@ h1 {
 }
 
 h2 {
-    margin-left: 20%;
-    margin-top: 3%;
-    margin-bottom: 1%;
+    margin-top: 40px;
+    margin-bottom: 20px;
     font-size: 2rem
 }
 
 .header2 {
-    margin-left: 20%;
-    margin-top: 6%;
-    margin-bottom: 1%;
+    margin-top: 100px;
+    margin-bottom: 20px;
     font-size: 2rem
 }
 
 .title {
-    text-align: center;
-    margin-top: 2%;
-    margin-bottom: 2%;
+    width: 700px;
+    margin: 45px auto;
 }
 
 hr {
@@ -117,7 +114,13 @@ hr {
     width: 700px;
     margin-right: auto;
     margin-left: auto;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.h2-row{
+	width: 800px;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .form1 {
@@ -135,24 +138,25 @@ label {
 }
 
 input {
-    width: 220px;
+    width: 250px;
 }
 
 .buttons {
-    margin-top: 5%;
+    margin-top: 100px;
 }
 
 .first_button {
-    margin-left: 20%;
-    width: 70%;
-    margin-bottom: 2%;
+    width: 700px;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .files{
-	margin-left: 25%;
-    float: left;
-    width: 70%;
-	margin-bottom: 2%;
+	margin-left: auto;
+	margin-right: auto;
+    width: 700px;
+	margin-bottom: 70px;
+	margin-top: 30px;
 }
 
 .xml_file, .xsd_file, .xsl_file{

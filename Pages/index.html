@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Formulár - výpožička kníh</title>
+	<title>Vypožičanie kníh - formulár</title>
 	<link rel="stylesheet" type="text/css" href="style.css" />
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -12,7 +12,7 @@
 		function add_book() {
 			booksCount = booksCount + 1;
 			var btn = document.createElement("next_book");
-			btn.innerHTML = '<h2 class="header2">' + booksCount + '. Kniha</h2><div class="row"><div class="form1"><label>Názov</label><input class="book_name_' + booksCount + '" /></div><div class="form2"><label>Autor</label><input class="book_author_' + booksCount + '" /></div></div ><div class="row"><div class="form1"><label>Žáner</label><input class="book_genre_' + booksCount + '" /></div><div class="form2"><label>Dátum vypožičania</label><input class="book_reserve_' + booksCount + '" type="date"/></div></div><div class="row"><div class="form1"><label>Dátum vrátenia</label><input class="book_return_' + booksCount + '" type="date"/></div></div>';
+			btn.innerHTML = '<div class="h2-row"><h2 class="header2">' + booksCount + '. Kniha</h2></div><div class="row"><div class="form1"><label>Názov</label><input class="book_name_' + booksCount + '" /></div><div class="form2"><label>Autor</label><input class="book_author_' + booksCount + '" /></div></div ><div class="row"><div class="form1"><label>Žáner</label><input class="book_genre_' + booksCount + '" /></div><div class="form2"><label>Dátum vypožičania</label><input class="book_reserve_' + booksCount + '" type="date"/></div></div><div class="row"><div class="form1"><label>Dátum vrátenia</label><input class="book_return_' + booksCount + '" type="date"/></div></div>';
 			document.getElementById("next_book").appendChild(btn);
 		}
 		function save_xml() {
@@ -199,12 +199,12 @@
 		<div class="page">
 			<section class="personal_info">
 				<div class="title">
-					<h1>Vypožičanie kníh</h1>
+					<h1>Vypožičanie kníh - formulár</h1>
 				</div>
 				<hr>
 				<div class="personal_form">
 
-					<h2>Základné údaje</h2>
+					<div class="h2-row"><h2>Základné údaje</h2></div>
 					<div class="row">
 						<div class="form1">
 							<label>Meno</label>
@@ -226,7 +226,7 @@
 						</div>
 					</div>
 
-					<h2>Adresa</h2>
+					<div class="h2-row"><h2>Adresa</h2></div>
 					<div class="row">
 						<div class="form1">
 							<label>Ulica</label>
@@ -254,7 +254,7 @@
 						</div>
 					</div>
 
-					<h2 class="header2">1. Kniha</h2>
+					<div class="h2-row"><h2 class="header2">1. Kniha</h2></div>
 					<div class="row">
 						<div class="form1">
 							<label>Názov</label>
