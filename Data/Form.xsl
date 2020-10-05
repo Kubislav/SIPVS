@@ -50,30 +50,28 @@
           }
 
           .row {
-              width: 50%;
-              height: 20%;
+              width: 700px;
               margin-right: auto;
               margin-left: auto;
-              margin-bottom: 1%;
+              margin-bottom: 10px;
           }
 
           .form1 {
-              width: 20%;
               float: left;
           }
 
           .form2 {
-              width: 20%;
               margin-left: 50%;
           }
 
           label {
               font-size: 1em;
               font-weight: 900;
+			  display: block;
           }
 
           input {
-              width: 180%;
+              width: 220px;
           }
 
           .buttons {
@@ -97,6 +95,10 @@
             width: 30%;
           }
 
+		  .book-area{
+              margin-bottom: 40px;
+          }
+
           button {
               border-radius: 4px;
               padding: 14px 40px;
@@ -111,102 +113,100 @@
         </style>
       </head>
 <body>
-        <h3 style="text-align: center">Osobné údaje</h3>
-        <table style="margin-left:43%">
-          <tr>
-            <td>Krstné meno:</td>
-            <td>
-              <xsl:apply-templates select="tim2:personal_info/tim2:first_name"/>
-            </td>
-          </tr>
-          <tr>
-            <td>Priezvisko:</td>
-            <td>
-              <xsl:apply-templates select="tim2:personal_info/tim2:last_name"/>
-            </td>
-          </tr>
-          <tr>
-            <td>E-mail:</td>
-            <td>
-              <xsl:apply-templates select="tim2:personal_info/tim2:email_customer"/>
-            </td>
-          </tr>
-          <tr>
-            <td>Dátum narodenia:</td>
-            <td>
-              <xsl:apply-templates select="tim2:personal_info/tim2:date"/>
-            </td>
-          </tr>
-        </table>
-        <h3 style="text-align: center">Adresa</h3>
-        <table style="margin-left:43%">
-          <tr>
-            <td>Ulica:</td>
-            <td>
-              <xsl:apply-templates select="tim2:address/tim2:street"/>
-            </td>
-          </tr>
-          <tr>
-            <td>Číslo ulice:</td>
-            <td>
-              <xsl:apply-templates select="tim2:address/tim2:adress_number"/>
-            </td>
-          </tr>
-          <tr>
-            <td>PSČ:</td>
-            <td>
-              <xsl:apply-templates select="tim2:address/tim2:postal_code"/>
-            </td>
-          </tr>
-          <tr>
-            <td>Mesto:</td>
-            <td>
-              <xsl:apply-templates select="tim2:address/tim2:town_customer"/>
-            </td>
-          </tr>
-          <tr>
-            <td>Krajina:</td>
-            <td>
-              <xsl:apply-templates select="tim2:address/tim2:country"/>
-            </td>
-          </tr>
-        </table>
-        <h3 style="text-align: center">Knihy</h3>
-        <xsl:for-each select="tim2:books/tim2:book">
-          <table style="margin-left:43%">
-            <tr>
-              <td>Meno knihy:</td>
-              <td>
-                <xsl:apply-templates select="tim2:book_name"/>
-              </td>
-            </tr>
-            <tr>
-              <td>Autor knihy:</td>
-              <td>
-                <xsl:apply-templates select="tim2:book_author"/>
-              </td>
-            </tr>
-            <tr>
-              <td>Žáner knihy:</td>
-              <td>
-                <xsl:apply-templates select="tim2:book_genre"/>
-              </td>
-            </tr>
-            <tr>
-              <td>Rezervované od:</td>
-              <td>
-                <xsl:apply-templates select="tim2:book_reserve"/>
-              </td>
-            </tr>
-            <tr>
-              <td>Rezervované do:</td>
-              <td>
-                <xsl:apply-templates select="tim2:book_return"/>
-              </td>
-            </tr>
-          </table>
-          <br/>
-        </xsl:for-each>
+		<div class="page">
+			<section class="personal_info">
+				<div class="title">
+					<h1>Vypožičanie kníh</h1>
+				</div>
+				<hr></hr>
+				<div class="personal_form">
+
+					<h2>Základné údaje</h2>
+					<div class="row">
+						<div class="form1">
+							<span><b>Meno: </b></span>
+							<span><xsl:apply-templates select="tim2:personal_info/tim2:first_name"/></span>
+						</div>
+						<div class="form2">
+							<span><b>Priezvisko: </b></span>
+							<span><xsl:apply-templates select="tim2:personal_info/tim2:last_name"/></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form1">
+							<span><b>E-mail: </b></span>
+							<span><xsl:apply-templates select="tim2:personal_info/tim2:email_customer"/></span>
+						</div>
+						<div class="form2">
+							<span><b>Dátum narodenia: </b></span>
+							<span><xsl:apply-templates select="tim2:personal_info/tim2:date"/></span>
+						</div>
+					</div>
+
+					<h2>Adresa</h2>
+					<div class="row">
+						<div class="form1">
+							<span><b>Ulica: </b></span>
+							<span><xsl:apply-templates select="tim2:address/tim2:street"/></span>
+						</div>
+						<div class="form2">
+							<span><b>Číslo ulice: </b></span>
+							<span><xsl:apply-templates select="tim2:address/tim2:adress_number"/></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form1">
+							<span><b>PSČ: </b></span>
+							<span><xsl:apply-templates select="tim2:address/tim2:postal_code"/></span>
+						</div>
+						<div class="form2">
+							<span><b>Mesto: </b></span>
+							<span><xsl:apply-templates select="tim2:address/tim2:town_customer"/></span>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form1">
+							<span><b>Krajina: </b></span>
+							<span><xsl:apply-templates select="tim2:address/tim2:country"/></span>
+						</div>
+					</div>
+
+					<h2>Knihy</h2>
+					<xsl:for-each select="tim2:books/tim2:book">
+
+						<div class="book-area">
+							<div class="row">
+								<div class="form1">
+									<span><b>Názov: </b></span>
+									<span><xsl:apply-templates select="tim2:book_name"/></span>
+								</div>
+								<div class="form2">
+									<span><b>Autor: </b></span>
+									<span><xsl:apply-templates select="tim2:book_author"/></span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="form1">
+									<span><b>Žáner: </b></span>
+									<span><xsl:apply-templates select="tim2:book_genre"/></span>
+								</div>
+								<div class="form2">
+									<span><b>Dátum vypožičania: </b></span>
+									<span><xsl:apply-templates select="tim2:book_reserve"/></span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="form1">
+									<span><b>Dátum vrátenia: </b></span>
+									<span><xsl:apply-templates select="tim2:book_return"/></span>
+								</div>
+							</div>
+							<br/>
+						</div>
+					</xsl:for-each>
+				</div>
+			</section>
+		</div>
       </body>
     </html>
   </xsl:template>
