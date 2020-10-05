@@ -26,7 +26,6 @@ namespace SIPVS
 
         public string ValidXsd(string xml_file, string xsd_file)
         {
-
             XmlReader forms = null;
             try
             {
@@ -40,8 +39,7 @@ namespace SIPVS
 
                 while (forms.Read()) { }
 
-                System.Console.WriteLine(xml_file + " and " + xsd_file);
-                return "xml successfully validated!";
+                return "ok";
             }
             catch (Exception e)
             {
@@ -76,8 +74,6 @@ namespace SIPVS
 
         public string SaveHtml(string xml_file, string xsl_file)
         {
-
-
             // Load the style sheet.
             XslCompiledTransform xslt = new XslCompiledTransform();
             xslt.Load("./Data/" + xsl_file);
@@ -88,10 +84,7 @@ namespace SIPVS
             // Execute the transform and output the results to a file.
             xslt.Transform("./Data/" + xml_file, "./Data/" + fileName);
 
-            System.Console.WriteLine(xml_file + " and " + xsl_file);
-            //return "html not yet created!";
-
-            return fileName + "Úspešne vytvorený!";
+            return fileName;
             
         }
     }

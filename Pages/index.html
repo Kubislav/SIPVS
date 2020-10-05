@@ -17,10 +17,7 @@
 		}
 		function save_xml() {
 		
-			if(check_empty_inputs()){
-			
-				
-			
+			if(1){
 				var xmlDoc = document.implementation.createDocument("", "", null);
 				var r = xmlDoc.createElement("tim2:registration");
 				xmlDoc.appendChild(r);
@@ -103,7 +100,12 @@
 				let xml_file = document.getElementsByClassName("xml_file")[0].files[0].name;
 				let xsd_file = document.getElementsByClassName("xsd_file")[0].files[0].name;
 				$.get('/api/valid_xsd?xml_file=' + xml_file + '&xsd_file=' + xsd_file, function (data) {
-					alert(data);
+					if(data === 'ok') {
+						alert("XML súbor je validný.");
+					} else {
+						alert(data);
+					}
+					
 				});
 			} catch (e) {
 				alert("vyberte XML a XSD súbory!");
@@ -116,7 +118,7 @@
 				let xsl_file = document.getElementsByClassName("xsl_file")[0].files[0].name;
 				$.get('/api/save_html?xml_file=' + xml_file + '&xsl_file=' + xsl_file, function (data) {
 					console.log();
-					alert(data);
+					alert("bol vytvorený súbor: " + data);
 				});
 			} catch (e) {
 				alert("vyberte XML a XSL súbory!");
