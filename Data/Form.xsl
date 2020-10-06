@@ -128,81 +128,80 @@
 					<div class="h2-row"><h2>Základné údaje</h2></div>
 					<div class="row">
 						<div class="form1">
-							<span><b>Meno: </b></span>
-							<span><xsl:apply-templates select="tim2:personal_info/tim2:first_name"/></span>
+              <label>Meno</label>
+              <input type="text" value="{tim2:personal_info/tim2:first_name}" readonly=""/> 
 						</div>
 						<div class="form2">
-							<span><b>Priezvisko: </b></span>
-							<span><xsl:apply-templates select="tim2:personal_info/tim2:last_name"/></span>
+              <label>Priezvisko</label>
+              <input type="text" value="{tim2:personal_info/tim2:last_name}" readonly=""/> 
 						</div>
 					</div>
 					<div class="row">
 						<div class="form1">
-							<span><b>E-mail: </b></span>
-							<span><xsl:apply-templates select="tim2:personal_info/tim2:email_customer"/></span>
+              <label>E-mail</label>
+              <input type="text" value="{tim2:personal_info/tim2:email_customer}" readonly=""/> 
 						</div>
 						<div class="form2">
-							<span><b>Dátum narodenia: </b></span>
-							<span><xsl:apply-templates select="tim2:personal_info/tim2:date"/></span>
+              <label>Dátum narodenia</label>
+              <input type="date" value="{tim2:personal_info/tim2:date}" readonly=""/> 
 						</div>
 					</div>
 
 					<div class="h2-row"><h2>Adresa</h2></div>
 					<div class="row">
 						<div class="form1">
-							<span><b>Ulica: </b></span>
-							<span><xsl:apply-templates select="tim2:address/tim2:street"/></span>
+              <label>Ulica</label>
+              <input type="text" value="{tim2:address/tim2:street}" readonly=""/> 
 						</div>
 						<div class="form2">
-							<span><b>Číslo ulice: </b></span>
-							<span><xsl:apply-templates select="tim2:address/tim2:adress_number"/></span>
+							<label>Číslo ulice</label>
+              <input type="text" value="{tim2:address/tim2:adress_number}" readonly=""/> 
 						</div>
 					</div>
 					<div class="row">
 						<div class="form1">
-							<span><b>PSČ: </b></span>
-							<span><xsl:apply-templates select="tim2:address/tim2:postal_code"/></span>
+							<label>PSČ</label>
+              <input type="text" value="{tim2:address/tim2:postal_code}" readonly=""/> 
 						</div>
 						<div class="form2">
-							<span><b>Mesto: </b></span>
-							<span><xsl:apply-templates select="tim2:address/tim2:town_customer"/></span>
+							<label>Mesto</label>
+              <input type="text" value="{tim2:address/tim2:town_customer}" readonly=""/> 
 						</div>
 					</div>
 					<div class="row">
 						<div class="form1">
-							<span><b>Krajina: </b></span>
-							<span><xsl:apply-templates select="tim2:address/tim2:country"/></span>
+							<label>Krajina</label>
+              <input type="text" value="{tim2:address/tim2:country}" readonly=""/> 
 						</div>
 					</div>
 
-					<div class="h2-row"><h2 class="header2">Knihy</h2></div>
 					<xsl:for-each select="tim2:books/tim2:book">
-
+          <div class="h2-row"><h2 class="header2">Kniha</h2></div>
 						<div class="book-area">
 							<div class="row">
 								<div class="form1">
-									<span><b>Názov: </b></span>
-									<span><xsl:apply-templates select="tim2:book_name"/></span>
+                  <label>Názov</label>
+                  <input type="text" value="{tim2:book_name}" readonly=""/> 
 								</div>
 								<div class="form2">
-									<span><b>Autor: </b></span>
-									<span><xsl:apply-templates select="tim2:book_author"/></span>
+									<label>Autor</label>
+                  <input type="text" value="{tim2:book_author}" readonly=""/> 
 								</div>
 							</div>
 							<div class="row">
 								<div class="form1">
-									<span><b>Žáner: </b></span>
-									<span><xsl:apply-templates select="tim2:book_genre"/></span>
+									<label>Žáner</label>
+                  <input type="text" value="{tim2:book_genre}" readonly=""/> 
 								</div>
 								<div class="form2">
-									<span><b>Dátum vypožičania: </b></span>
-									<span><xsl:apply-templates select="tim2:book_reserve"/></span>
+									<label>Dátum vypožičania</label>
+                  <input type="date" value="{tim2:book_reserve}" readonly=""/> 
 								</div>
 							</div>
 							<div class="row">
 								<div class="form1">
-									<span><b>Dátum vrátenia: </b></span>
-									<span><xsl:apply-templates select="tim2:book_return"/></span>
+									<label>Dátum vrátenia</label>
+                  <input type="date" value="{tim2:book_return}" readonly=""/> 
 								</div>
 							</div>
 							<br/>
