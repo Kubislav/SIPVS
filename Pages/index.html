@@ -6,6 +6,9 @@
 	<link rel="stylesheet" type="text/css" href="style.css" />
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script type="text/javascript" src="https://www.slovensko.sk/static/zep/dbridge_js/v1.0/config.js"></script>
+	<script type="text/javascript" src="https://www.slovensko.sk/static/zep/dbridge_js/v1.0/dCommon.min.js"></script>
+	<script type="text/javascript" src="https://www.slovensko.sk/static/zep/dbridge_js/v1.0/dSigXades.min.js"></script>
 	<script>
 		var booksCount = 1;
 
@@ -15,6 +18,7 @@
 			btn.innerHTML = '<div class="h2-row"><h2 class="header2">Kniha</h2></div><div class="row"><div class="form1"><label>Názov</label><input class="book_name_' + booksCount + '" /></div><div class="form2"><label>Autor</label><input class="book_author_' + booksCount + '" /></div></div ><div class="row"><div class="form1"><label>Žáner</label><input class="book_genre_' + booksCount + '" /></div><div class="form2"><label>Dátum vypožičania</label><input class="book_reserve_' + booksCount + '" type="date"/></div></div><div class="row"><div class="form1"><label>Dátum vrátenia</label><input class="book_return_' + booksCount + '" type="date"/></div></div>';
 			document.getElementById("next_book").appendChild(btn);
 		}
+		
 		function save_xml() {
 		
 			if(1){
@@ -126,16 +130,46 @@
 		}
 		
 		function sign_document() {
-            try {
-                let xml_file = document.getElementsByClassName("xml_file")[0].files[0].name;
-				let xsl_file = document.getElementsByClassName("xsl_file")[0].files[0].name;
-                let xsd_file = document.getElementsByClassName("xsd_file")[0].files[0].name;
-                $.get('/api/save_html?xml_file=' + xml_file + '&xsl_file=' + xsl_file + '&xsd_file=' + xsd_file, function (data) {
-                    console.log("ok");
-                });
-            } catch (e) {
-                alert("vyberte súbory!");
-            }
+			let modal = document.getElementsByClassName("modal")[0];
+			modal.style.display = "block";
+			
+
+			function Callback(onSuccess) {
+				this.onSuccess = onSuccess;
+				this.onError = function(e) {
+					alert("Chyba: " + e);
+					modal.style.display = "none";
+				}
+			}					
+		
+			ditec.dSigXadesJs.deploy(null, new Callback(function(){			
+				
+				ditec.dSigXadesJs.initialize(new Callback(function(){
+				
+					ditec.dSigXadesJs.addTxtObject("objectId", "objectDescription", "Vypožičanie kníh", "http://objectFormatIdentifier", new Callback(function(){
+				
+						ditec.dSigXadesJs.sign20("signatureId", "http://www.w3.org/2001/04/xmlenc#sha256", "urn:oid:1.3.158.36061701.1.2.2", "dataEnvelopeId", "http://dataEnvelopeURI", "dataEnvelopeDescr", new Callback(function(){
+					
+							ditec.dSigXadesJs.getSignedXmlWithEnvelope(new Callback(function(data) {
+								console.log(data);
+								alert('Úspešne podpísané!');
+								modal.style.display = "none";
+							}));
+						}));
+					}));
+				}));				
+			}));
+
+            // try {
+            //     let xml_file = document.getElementsByClassName("xml_file")[0].files[0].name;
+			// 	let xsl_file = document.getElementsByClassName("xsl_file")[0].files[0].name;
+            //     let xsd_file = document.getElementsByClassName("xsd_file")[0].files[0].name;
+            //     $.get('/api/sign?xml_file=' + xml_file + '&xsl_file=' + xsl_file + '&xsd_file=' + xsd_file, function (data) {
+            //         console.log("ok");
+            //     });
+            // } catch (e) {
+			//     alert("vyberte súbory!");
+            // }
         }
 		
 		function check_empty_inputs(){
@@ -209,6 +243,11 @@
 	</script>
 </head>
 	<body>
+		<div class="modal">
+			<div class="modal-content">
+			<p>Prebieha podpisovanie...</p>
+			</div>
+		</div>	  
 		<div class="page">
 			<section class="personal_info">
 				<div class="title">
@@ -300,11 +339,11 @@
 			
 			<section class="buttons">
 				<div class="first_button">
-					<button class="add_book" onclick="add_book()">Pridat knihu</button>
+					<button class="add_book" onclick="add_book()">Pridať knihu</button>
 					<button class="save_xml" onclick="save_xml()">Uložiť XML</button>
 					<button class="valid_xsd" onclick="valid_xsd()">Validácia XSD</button>
 					<button class="save_html" onclick="save_html()">Uložiť HTML</button>
-					<button class="sign" onclick="sign_document()">Podpisat</button>
+					<button class="sign" onclick="sign_document()">Podpísať</button>
 				</div>
 				<div class="files">
 					<label for="xml_file">vyberte XML súbor:</label>
