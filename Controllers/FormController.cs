@@ -41,5 +41,11 @@ namespace SIPVS {
         { 
             return Ok(this._formService.SaveHtml(xml_file, xsl_file));
         }
+		
+		[HttpGet("sign")]
+        public IActionResult signDocument(string xml_file, string xsl_file, string xsd_file)
+        {
+            return Ok(this._formService.SignDocument(xml_file, xsl_file, xsd_file));
+        }
     }
 }

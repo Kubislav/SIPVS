@@ -87,5 +87,11 @@ namespace SIPVS
             return fileName;
             
         }
+		
+		public string SignDocument(string xml_file, string xsl_file, string xsd_file)
+        {
+            Console.WriteLine("string");
+            return "string";
+        }
     }
 }

@@ -7,4 +7,6 @@ public interface IFormService
   public string ValidXsd(string xml_file, string xsd_file);
 
   public string SaveHtml(string xml_file, string xsl_file);
+  
+  public string SignDocument(string xml_file, string xsl_file, string xsd_file);
 }
