@@ -150,8 +150,8 @@
 						this.onError = function(e) {
 							modal.style.display = "none";
 							if(e.code === 1) alert('Zrušenie operácie');
-							if(e.code === -201) alert('Nie je nainštalovaná niektorá požadovaná súčasť pre komponent D.Bridge JS.');
-							if(e.code === -202) alert('Zlyhalo spustenie niektorej požadovanej súčasti komponentu D.Bridge JS.');
+							else if(e.code === -201) alert('Nie je nainštalovaná niektorá požadovaná súčasť pre komponent D.Bridge JS.');
+							else if(e.code === -202) alert('Zlyhalo spustenie niektorej požadovanej súčasti komponentu D.Bridge JS.');
 							else alert(e.message);
 						}
 					}					
