@@ -7,6 +7,8 @@ using System.Xml.Linq;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Xsl;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SIPVS
 {
@@ -90,8 +92,12 @@ namespace SIPVS
 		
 		public string SignDocument(string xml_file, string xsl_file, string xsd_file)
         {
-            Console.WriteLine("string");
-            return "string";
+            string jsonString = JsonSerializer.Serialize(new {
+                xml_file = File.ReadAllText(Path.Combine("./Data/", xml_file)),
+                xsl_file = File.ReadAllText(Path.Combine("./Data/", xsl_file)),
+                xsd_file = File.ReadAllText(Path.Combine("./Data/", xsd_file)),
+            });
+            return jsonString;
         }
     }
 }
