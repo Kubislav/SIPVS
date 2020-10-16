@@ -47,5 +47,10 @@ namespace SIPVS {
         {
             return Ok(this._formService.SignDocument(xml_file, xsl_file, xsd_file));
         }
+        [HttpGet("xades")]
+        public IActionResult saveXades(string data)
+        {
+            return Ok(this._formService.saveXades(data));
+        }
     }
 }

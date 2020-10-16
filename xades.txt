@@ -1,0 +1,1 @@
+<xzep:DataEnvelope xmlns:xzep="http://www.ditec.sk/ep/signature_formats/xades_zep/v2.0" URI="http://dataEnvelopeURI" Id="dataEnvelopeId" Description="dataEnvelopeDescr"><ds:Object Id="objectId" xmlns:ds="http://www.w3.org/2000/09/xmldsig

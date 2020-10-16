@@ -93,6 +93,7 @@
 				
 				console.log(xmlDoc);
 
+				
 				var xmlText = new XMLSerializer().serializeToString(xmlDoc)
 				$.get('/api/save_xml?xml=' + xmlText, function (data) {
 					alert("bol vytvorený súbor: " + data);
@@ -147,6 +148,7 @@
 
 					function Callback(onSuccess) {
 						this.onSuccess = onSuccess;
+						console.log(onSuccess);
 						this.onError = function(e) {
 							modal.style.display = "none";
 							if(e.code === 1) alert('Zrušenie operácie');
@@ -171,11 +173,17 @@
 								'xslReference' , 
 								new Callback(function(){
 								ditec.dSigXadesJs.sign20("signatureId", "http://www.w3.org/2001/04/xmlenc#sha256", "urn:oid:1.3.158.36061701.1.2.2", "dataEnvelopeId", "http://dataEnvelopeURI", "dataEnvelopeDescr", new Callback(function(){
-							
 									ditec.dSigXadesJs.getSignedXmlWithEnvelope(new Callback(function(data) {
-										console.log(data);
+										
 										alert('Úspešne podpísané!');
 										modal.style.display = "none";
+										var regexp = new RegExp('#([^\s]*)','g');
+										var tmp = data.replace(regexp, 'REPLACED')
+										//console.log(data);
+										//var res = encodeURIComponent(data);
+										$.get('/api/xades?data=' + tmp, function (tmp) {
+										alert("bol vytvorený súbor: " + tmp);
+										});
 									}));
 								}));
 							}));
@@ -186,6 +194,13 @@
 			    alert("vyberte súbory!");
 			}
         }
+		
+		function saveSignDocument(data){
+			console.log(data)
+			$.get('/api/xades?data=' + data, function (data) {
+                    alert("bol vytvorený súbor: " + data);
+                });
+		}
 		
 		function check_empty_inputs(){
 			var allEmpty = true;

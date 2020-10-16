@@ -9,6 +9,7 @@ using System.Xml.Schema;
 using System.Xml.Xsl;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text;
 
 namespace SIPVS
 {
@@ -98,6 +99,29 @@ namespace SIPVS
                 xsd_file = File.ReadAllText(Path.Combine("./Data/", xsd_file)),
             });
             return jsonString;
+        }
+
+        public string saveXades(string data)
+        {
+            Console.WriteLine(data); 
+            string fileName = "xades.xml";
+            var bytes = System.Text.Encoding.UTF8.GetBytes(data);
+            //File.WriteAllBytes(Path.Combine("./Data/", fileName), bytes);
+            //File.WriteAllText(Path.Combine("./Data/", fileName), data, System.Text.Encoding.);
+            using (StreamWriter outputFile = new StreamWriter(Path.Combine("./Data/", fileName)))
+            {
+                outputFile.Flush();
+                //Console.WriteLine(data);
+                outputFile.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                XDocument doc = new XDocument (new XDeclaration("1.0", "UTF-8", ""));
+                
+                doc = XDocument.Parse(data);
+                outputFile.WriteLine(doc.ToString());
+                //outputFile.WriteLine(data);
+            }
+            //File.WriteAllText("xades.txt", data);
+            return fileName;
+            
         }
     }
 }
