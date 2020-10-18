@@ -15,15 +15,6 @@ namespace SIPVS {
             this._formService = formService;
         }
 
-        // [HttpPost("save_xml")]
-        // public IActionResult saveXml(DataModel data)
-        // { 
-        //     System.Console.WriteLine("data from post request: " + data.data);
-        //     FormModel formModel = new FormModel();
-        //     formModel.FullName = "Florian";
-        //     return Ok(this._formService.SaveXml(formModel));
-        // }
-
         [HttpGet("save_xml")]
         public IActionResult saveXml(string xml)
         { 
@@ -47,10 +38,11 @@ namespace SIPVS {
         {
             return Ok(this._formService.SignDocument(xml_file, xsl_file, xsd_file));
         }
-        [HttpGet("xades")]
-        public IActionResult saveXades(string data)
-        {
-            return Ok(this._formService.saveXades(data));
+
+        [HttpPost("xades")]
+        public IActionResult saveXades([FromBody]FormModel formModel)
+        { 
+            return Ok(this._formService.saveXades(formModel.data));
         }
     }
 }
