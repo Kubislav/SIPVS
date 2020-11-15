@@ -115,5 +115,19 @@ namespace SIPVS
             return fileName;
             
         }
+    
+        public string MakeStamp(string xades_file)
+        {
+            string fileName = "xadesTimestamp.xml";
+            System.Console.WriteLine(xades_file);
+
+            using (StreamWriter outputFile = new StreamWriter(Path.Combine("./Data/", fileName)))
+            {
+                outputFile.WriteLine("todo");
+                // XDocument doc = XDocument.Parse(xml);
+                // outputFile.WriteLine(doc.ToString());
+            }
+            return fileName;
+        }
     }
 }

@@ -44,5 +44,11 @@ namespace SIPVS {
         { 
             return Ok(this._formService.saveXades(formModel.data));
         }
+
+        [HttpGet("make_stamp")]
+        public IActionResult makeStamp(string xades_file)
+        { 
+            return Ok(this._formService.MakeStamp(xades_file));
+        }
     }
 }

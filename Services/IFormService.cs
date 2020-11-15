@@ -10,5 +10,7 @@ public interface IFormService
   
   public string SignDocument(string xml_file, string xsl_file, string xsd_file);
 
-    public string saveXades(string data);
+  public string saveXades(string data);
+
+  public string MakeStamp(string xades_file);
 }
