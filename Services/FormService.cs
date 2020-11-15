@@ -10,6 +10,9 @@ using System.Xml.Xsl;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text;
+using System.Net.Http;
+using System.Net;
+using System.Collections.Specialized;
 
 namespace SIPVS
 {
@@ -59,7 +62,7 @@ namespace SIPVS
 
         }
 
-        static void settingsValidationEventHandler(object sender, ValidationEventArgs e)
+        private static void settingsValidationEventHandler(object sender, ValidationEventArgs e)
         {
             if (e.Severity == XmlSeverityType.Warning)
             {
@@ -119,15 +122,41 @@ namespace SIPVS
         public string MakeStamp(string xades_file)
         {
             string fileName = "xadesTimestamp.xml";
-            System.Console.WriteLine(xades_file);
 
+        // najdi SignatureValue     
+            XmlDocument xades = new XmlDocument();
+            xades.Load("./Data/" + xades_file);
+            String signatureValue = xades.GetElementsByTagName("ds:SignatureValue")[0].InnerText;
+
+        // ziskaj SignatureTimeStamp
+            String signatureTimeStamp = getSignatureTimeStamp(signatureValue);
+
+        // TODO: vytvor xadesT
+            string xadesT = "<todo>" + signatureTimeStamp + "</todo>";
+            System.Console.WriteLine(signatureTimeStamp);
+        
+        // uloz xadesT 
             using (StreamWriter outputFile = new StreamWriter(Path.Combine("./Data/", fileName)))
             {
-                outputFile.WriteLine("todo");
-                // XDocument doc = XDocument.Parse(xml);
-                // outputFile.WriteLine(doc.ToString());
+                XDocument doc = XDocument.Parse(xadesT);
+                outputFile.WriteLine(doc.ToString());
             }
             return fileName;
+        }
+
+        /**
+            Funkcia vracia casovu peciatku 
+        */
+        private static string getSignatureTimeStamp(String data) {
+            using (var client = new WebClient())
+            {
+                var response = client.UploadString(
+                    new Uri("http://test.ditec.sk/timestampws/TS.aspx"), 
+                    "POST", 
+                    data
+                );
+                return response;
+            }
         }
     }
 }
