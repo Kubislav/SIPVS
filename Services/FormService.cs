@@ -13,6 +13,12 @@ using System.Text;
 using System.Net.Http;
 using System.Net;
 using System.Collections.Specialized;
+using System.Xml.XPath;
+using Org.BouncyCastle;
+using Org.BouncyCastle.Tsp;
+using Org.BouncyCastle.X509.Store;
+using Org.BouncyCastle.Cms;
+using Org.BouncyCastle.Asn1.Tsp;
 
 namespace SIPVS
 {
@@ -121,27 +127,33 @@ namespace SIPVS
     
         public string MakeStamp(string xades_file)
         {
-            string fileName = "xadesTimestamp.xml";
-
-        // najdi SignatureValue     
             XmlDocument xades = new XmlDocument();
             xades.Load("./Data/" + xades_file);
-            String signatureValue = xades.GetElementsByTagName("ds:SignatureValue")[0].InnerText;
 
-        // ziskaj SignatureTimeStamp
-            String signatureTimeStamp = getSignatureTimeStamp(signatureValue);
+            var namespaceId = new XmlNamespaceManager(xades.NameTable);
+            namespaceId.AddNamespace("ds", "http://www.w3.org/2000/09/xmldsig#");
+            string data = xades.SelectSingleNode("//ds:SignatureValue", namespaceId).InnerXml;
+            
+            String signatureTimeStamp = getSignatureTimeStamp(data);
+            TimeStampResponse tokenResponse = new TimeStampResponse(Convert.FromBase64CharArray(signatureTimeStamp.ToCharArray(), 0, signatureTimeStamp.Length));
+            Console.WriteLine(Convert.ToBase64String(tokenResponse.TimeStampToken.GetEncoded()));
+            
+            XmlNodeList elemList = xades.GetElementsByTagName("xades:QualifyingProperties");
+            XmlElement UnsignedElem = xades.CreateElement("xades" , "UnsignedProperties", "http://uri.etsi.org/01903/v1.3.2#");
+            XmlElement UnsignedSignElem = xades.CreateElement("xades" , "UnsignedSignatureProperties", "http://uri.etsi.org/01903/v1.3.2#");
+            XmlElement SigTimeElem = xades.CreateElement("xades" , "SignatureTimeStamp", "http://uri.etsi.org/01903/v1.3.2#");
+            XmlElement EncapsulatedTimestamp = xades.CreateElement("xades", "EncapsulatedTimeStamp", "http://uri.etsi.org/01903/v1.3.2#");
+            SigTimeElem.SetAttribute("Id", "IdSignatureTimeStamp");
+            EncapsulatedTimestamp.InnerText = Convert.ToBase64String(tokenResponse.TimeStampToken.GetEncoded());
 
-        // TODO: vytvor xadesT
-            string xadesT = "<todo>" + signatureTimeStamp + "</todo>";
-            System.Console.WriteLine(signatureTimeStamp);
-        
-        // uloz xadesT 
-            using (StreamWriter outputFile = new StreamWriter(Path.Combine("./Data/", fileName)))
-            {
-                XDocument doc = XDocument.Parse(xadesT);
-                outputFile.WriteLine(doc.ToString());
-            }
-            return fileName;
+            UnsignedElem.AppendChild(UnsignedSignElem);
+            UnsignedSignElem.AppendChild(SigTimeElem);
+            SigTimeElem.AppendChild(EncapsulatedTimestamp);
+
+            elemList[0].InsertAfter(UnsignedElem, elemList[0].LastChild);
+            xades.Save("./Data/xades.xml");
+            Console.Write("text" + elemList[0]);
+            return "xades.xml";
         }
 
         /**
