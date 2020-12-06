@@ -212,6 +212,10 @@
 			}
 		}
 		
+		function verify() {
+			window.open("/api/verify");
+		}
+
 		function check_empty_inputs(){
 			var allEmpty = true;
 				$(':input').each(function() {
@@ -385,6 +389,7 @@
 					<button class="save_html" onclick="save_html()">Uložiť HTML</button>
 					<button class="sign" onclick="sign_document()">Podpísať</button>
 					<button class="make_stamp" onclick="make_stamp()">Opečiatkovať</button>
+					<button class="verify" onclick="verify()">Overenie podpisov</button>
 				</div>
 				<div class="files">
 					<label for="xml_file">vyberte XML súbor:</label>

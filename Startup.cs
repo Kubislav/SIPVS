@@ -19,6 +19,7 @@ namespace SIPVS
             services.AddControllers();
 
             services.AddScoped(typeof(IFormService), typeof(FormService));
+            services.AddScoped(typeof(IVerificationService), typeof(VerificationService));
             // services.AddTransient();
             // services.AddSingleton();
 

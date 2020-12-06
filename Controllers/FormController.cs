@@ -11,8 +11,10 @@ namespace SIPVS {
     public class FormController: ControllerBase
     {
         private IFormService _formService;
-        public FormController(IFormService formService) {
+        private IVerificationService _verificationService;
+        public FormController(IFormService formService, IVerificationService verificationService) {
             this._formService = formService;
+            this._verificationService = verificationService;
         }
 
         [HttpGet("save_xml")]
@@ -49,6 +51,12 @@ namespace SIPVS {
         public IActionResult makeStamp(string xades_file)
         { 
             return Ok(this._formService.MakeStamp(xades_file));
+        }
+
+        [HttpGet("verify")]
+        public IActionResult verify(string xades_file)
+        { 
+            return Ok(this._verificationService.SignaturesVerification());
         }
     }
 }
