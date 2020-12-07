@@ -53,11 +53,11 @@ namespace SIPVS
             {
                 return status;
             }
-            if((status=step_3(filename)) != "OK") //TODO: Overenie časovej pečiatky 
+            if((status=step_4(filename)) != "OK") //TODO: Overenie časovej pečiatky 
             {
                 return status;
             }
-            if((status=step_3(filename)) != "OK") //TODO: Overenie platnosti podpisového certifikátu 
+            if((status=step_5(filename)) != "OK") //TODO: Overenie platnosti podpisového certifikátu 
             {
                 return status;
             }
