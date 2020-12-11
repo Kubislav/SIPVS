@@ -22,6 +22,13 @@ using Org.BouncyCastle.Asn1.Tsp;
 using System.Security.Cryptography.X509Certificates;
 using LanguageExt;
 using System.Numerics;
+using System.Globalization;
+using System.Security.Cryptography.Xml;
+using System.Security.Cryptography;
+using Org.BouncyCastle.Asn1.Ocsp;
+using System.Security.Policy;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.X509;
 
 namespace SIPVS
 {
@@ -52,7 +59,7 @@ namespace SIPVS
             {
                 return status;
             }
-            if((status=step_3(filename)) != "OK") //TODO: Core validation
+            if((status=step_3(filename)) != "OK") //Core validation
             {
                 return status;
             }
@@ -132,41 +139,98 @@ namespace SIPVS
             
             return "OK";
         }
-        
-        private string step_3(string filename) //TODO: Core validation
+
+        private string step_3(string filename) //Core validation
         {
             XmlDocument xades = new XmlDocument();
             xades.Load(filename);
             var namespaceId = new XmlNamespaceManager(xades.NameTable);
             namespaceId.AddNamespace("ds", "http://www.w3.org/2000/09/xmldsig#");
             namespaceId.AddNamespace("xades", "http://uri.etsi.org/01903/v1.3.2#");
+            //signed info kanonikaliyovat
+            //
 
-            //check Signature Id
+
+            //check ds:SignedInfo and ds:Manifest
+            XmlNode signedInfoN = xades.SelectSingleNode(@"//ds:SignedInfo", namespaceId);
+            XmlNodeList referenceElements = signedInfoN.SelectNodes(@"//ds:Reference", namespaceId);
+            //Reference in SignedInfo
+            foreach (XmlNode reference in referenceElements)
+            {
+                String ReferenceURI = reference.Attributes.GetNamedItem("URI").Value;
+                ReferenceURI = ReferenceURI.Substring(1);
+                XmlNode digestMethod = reference.SelectSingleNode("ds:DigestMethod", namespaceId);
+                String digestMethodAlgorithm = digestMethod.Attributes.GetNamedItem("Algorithm").Value;
+                string dsDigestValue = reference.SelectSingleNode("ds:DigestValue", namespaceId).InnerText;
+
+                if (ReferenceURI.StartsWith("ManifestObject"))
+                {
+                    //get Manifest XML and check DigestValue
+                    string manifestXML = xades.SelectSingleNode("//ds:Manifest[@Id='" + ReferenceURI + "']", namespaceId).OuterXml;
+                    MemoryStream sManifest = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(manifestXML));
+                    XmlDsigC14NTransform t = new XmlDsigC14NTransform();
+                    t.LoadInput(sManifest);
+                    HashAlgorithm hash = null;
+
+                    switch (digestMethodAlgorithm)
+                    {
+                        case "http://www.w3.org/2000/09/xmldsig#sha1":
+                            hash = new System.Security.Cryptography.SHA1Managed();
+                            break;
+                        case "http://www.w3.org/2001/04/xmlenc#sha256":
+                            hash = new System.Security.Cryptography.SHA256Managed();
+                            break;
+                        case "http://www.w3.org/2001/04/xmldsig-more#sha384":
+                            hash = new System.Security.Cryptography.SHA384Managed();
+                            break;
+                        case "http://www.w3.org/2001/04/xmlenc#sha512":
+                            hash = new System.Security.Cryptography.SHA512Managed();
+                            break;
+                    }
+
+                    if (hash == null)
+                        return "nesprávny hashovací algoritmus " + digestMethodAlgorithm;
+
+                    byte[] digest = t.GetDigestedOutput(hash);
+                    string result = Convert.ToBase64String(digest);
+                    Console.WriteLine("Overenie hodnoty podpisu");
+                    Console.WriteLine(result);
+                    Console.WriteLine(dsDigestValue);
+                    if (!result.Equals(dsDigestValue))
+                        return "hodnoty DigestValue s výpočtom Manifest sa nezhodujú";
+                }
+            }
+
+
+
+            //check Id in ds:Signature
             XmlNode dsSignatureId = xades.SelectSingleNode("//ds:Signature", namespaceId).Attributes["Id"];
             if (dsSignatureId == null)
-                return "ds:Signature neobsahuje Id atribut";
-
-            //check Signature namespace xmlns:ds
+                return "ds:Signature nemá atribút Id";
+            //check namespace in ds:Signature
             XmlNode dsSignatureXmlns = xades.SelectSingleNode("//ds:Signature", namespaceId).Attributes["xmlns:ds"];
             if (dsSignatureXmlns == null)
-                return "ds:Signature nema specifikovany namespace xmlns:ds";
+                return "ds:Signature nemá špecifikovaný namespace xmlns:ds";
+
+
 
             //check SignatureValue Id
             XmlNode dsSignatureValueId = xades.SelectSingleNode("//ds:SignatureValue", namespaceId).Attributes["Id"];
             if (dsSignatureValueId == null)
-                return "ds:SignatureValue neobsahuje Id atribut";
+                return "ds:SignatureValue nemá atribút Id";
 
-            //check SignedInfo
+
+
+            //check reference in ds:SignedInfo
             XmlNode signedInfo = xades.SelectSingleNode("//ds:SignedInfo", namespaceId);
             XmlNodeList dsKeyInfoId = signedInfo.SelectNodes("//ds:Reference", namespaceId);
-
             if (dsKeyInfoId.Count < 1)
                 return "ds:SignedInfo neobsahuje ds:Reference";
-
             String KeyInfo = "";
             String SignatureProperties = "";
             String SignedProperties = "";
             List<string> Manifest = new List<string>();
+            //get URI 
             foreach (XmlNode ReferenceList in dsKeyInfoId)
             {
                 if (ReferenceList.Attributes["Id"] == null)
@@ -196,23 +260,30 @@ namespace SIPVS
                     }
                 }  
             }
-
-            //use in element keyinfo
+            //check if exist ds:KeyInfo, ds:SignatureProperties, xades:SignedProperties
             XmlNode ElementKeyInfo = xades.SelectSingleNode("//ds:KeyInfo", namespaceId);
             XmlNode ElementSignatureProperties = xades.SelectSingleNode("//ds:SignatureProperties", namespaceId);
             XmlNode ElementSignedProperties = xades.SelectSingleNode("//xades:SignedProperties", namespaceId);
-            if (ElementKeyInfo.Attributes["Id"] == null || !ElementKeyInfo.Attributes["Id"].Value.Equals(KeyInfo))
-                return "ds:Keyinfo nema Id alebo sa nezhoduje Id s URI";
-
-            if (ElementSignatureProperties.Attributes["Id"] == null || !ElementSignatureProperties.Attributes["Id"].Value.Equals(SignatureProperties))
-                return "ds:SignatureProperties nema Id alebo sa nezhoduje Id s URI";
             
-            if (ElementSignedProperties.Attributes["Id"] == null || !ElementSignedProperties.Attributes["Id"].Value.Equals(SignedProperties))
-                return "xades:SignedProperties nema Id alebo sa nezhoduje Id s URI";
+            if (ElementKeyInfo.Attributes["Id"] == null)
+                return "ds:Keyinfo nemá atribút Id";
+            if (!ElementKeyInfo.Attributes["Id"].Value.Equals(KeyInfo))
+                return "ds:Keyinfo, nezhoduje sa Id s URI";
 
+            if (ElementSignatureProperties.Attributes["Id"] == null)
+                return "ds:SignatureProperties nemá atribút Id";
+            if (!ElementSignatureProperties.Attributes["Id"].Value.Equals(SignatureProperties))
+                return "ds:SignatureProperties, nezhoduje sa Id s URI";
+
+            if (ElementSignedProperties.Attributes["Id"] == null)
+                return "xades:SignedProperties nemá atribút Id";
+            if (!ElementSignedProperties.Attributes["Id"].Value.Equals(SignedProperties))
+                return "xades:SignedProperties, nezhoduje sa Id s URI";
+
+            //check if exist ds:Manifest
             XmlNodeList ElementManifest = xades.SelectNodes("//ds:Manifest", namespaceId);
             bool flag = false;
-            foreach(XmlNode OneManifest in ElementManifest)
+            foreach (XmlNode OneManifest in ElementManifest)
             {
                 foreach(String ManifestURI in Manifest)
                 {
@@ -220,21 +291,21 @@ namespace SIPVS
                         flag = true;
                 }
             }
-
             if(!flag)
-                return "ds:Manifest nema Id alebo sa nezhoduje Id s URI";
+                return "ds:Manifest nemá atribút Id alebo sa nezhoduje Id s URI";
 
-            //check KeyInfo
+
+
+            //check ds:KeyInfo Id
             if (ElementKeyInfo.Attributes["Id"] == null)
-                return "element ds:KeyInfo nema atribut Id";
-
+                return "element ds:KeyInfo nemá atribút Id";
+            //check ds:KeyInfo elements
             XmlNode X509Data = ElementKeyInfo.SelectSingleNode("//ds:X509Data", namespaceId);
             if (X509Data == null)
-                return "neobsahuje ds:X509Data";
-
+                return "ds:KeyInfo neobsahuje element ds:X509Data";
             if (X509Data.ChildNodes.Count < 3)
-                return "chybaju elementy z X509Data";
-
+                return " chýbajú podelementy pre ds:X509Data";
+            //check ds:KeyInfo values
             XmlNodeList elemList = X509Data.ChildNodes;
             byte[] bytes;
             var cert = new X509Certificate2();
@@ -261,25 +332,261 @@ namespace SIPVS
                         break;
                 }
             }
-
+            BigInteger hex = BigInteger.Parse(cert.SerialNumber, NumberStyles.AllowHexSpecifier);
             if (!cert.Subject.Equals(SubjectName))
-                return "Subject sa nezhoduje";
+                return "hodnota ds:X509SubjectName sa nezhoduje s príslušnou hodnotou v certifikáte";
             if (!cert.Issuer.Equals(IssuerSerialFirst))
-                return "Issuername sa nezhoduje";
-            if (!cert.SerialNumber.Equals(IssuerSerialSecond))
-                return "Serialnumber sa nezhoduje";
+                return "hodnota ds:X509IssuerName sa nezhoduje s príslušnou hodnotou v certifikáte";
+            if (!hex.ToString().Equals(IssuerSerialSecond))
+                return "hodnota ds:X509SerialNumber sa nezhoduje s príslušnou hodnotou v certifikáte";
+
+
+
+            //check ds:SignatureProperties Id
+            if (ElementSignatureProperties.Attributes["Id"] == null)
+                return "element ds:SignatureProperties nema atribut Id";
+            //check ds:SignatureProperties numbers of elements
+            XmlNodeList elemListSignatureProperties = ElementSignatureProperties.ChildNodes;
+            if (elemListSignatureProperties.Count < 2)
+                return "ds:SignatureProperties neobsahuje dva elementy";
+            //check ds:SignatureProperties elements 
+            for (int i = 0; i < elemListSignatureProperties.Count; i++)
+            {
+                if (elemListSignatureProperties[i].FirstChild.Name.Equals("xzep:SignatureVersion") ||
+                   elemListSignatureProperties[i].FirstChild.Name.Equals("xzep:ProductInfos"))
+                {
+                    String tmpTargetValue = elemListSignatureProperties[i].Attributes["Target"].Value;
+                    tmpTargetValue = tmpTargetValue.Substring(1);
+                    if (!tmpTargetValue.Equals(dsSignatureId.Value))
+                        return "atribút Target v elemente ds:SignatureProperty nie je nastavený na element ds:Signature";
+                }
+            }
+
+
+
+            //check Manifest and Manifest references
+            String ManifestReferenceUri = "";
+            String algorithmDigestMethod = "";
+            String algorithmTransforms = "";
+            String digestValue = "";
+            bool flag1 = false;
+            string[] SUPPORTED_TRANSFORMS = {
+                "http://www.w3.org/TR/2001/REC-xml-c14n-20010315",
+                "http://www.w3.org/2000/09/xmldsig#base64",
+            };
+            string[] SUPPORTED_DIGEST_METHOD = {
+                "http://www.w3.org/2001/04/xmlenc#sha512 ",
+                "http://www.w3.org/2001/04/xmldsig-more#sha384",
+                "http://www.w3.org/2001/04/xmlenc#sha256",
+                "http://www.w3.org/2001/04/xmldsig-more#sha224",
+                "http://www.w3.org/2000/09/xmldsig#sha1",
+            };
+            for (int i = 0; i < ElementManifest.Count; i++)
+            {
+                //check ds:Manifest Id
+                if (ElementManifest[i].Attributes["Id"] == null)
+                    return "jeden z elementov ds:Manifest nemá atribút Id";
+                //check number of reference, ds:Object
+                XmlNodeList ManifestChildNodes = ElementManifest[i].ChildNodes;
+                if (ManifestChildNodes.Count > 1 || ManifestChildNodes.Count < 1)
+                    return "ds:Manifest neobsahuje práve jedenu referenciu";
+                if (!ManifestChildNodes[0].Attributes["Type"].Value.Contains("Object"))
+                    return "nezhoduje sa Type v ds:Manifest";
+                //check value attribute Type
+                if (ManifestChildNodes[0].Attributes["Type"].Value.Equals("http://www.w3.org/2000/09/xmldsig#Object"))
+                {
+                    //check supported ds:Transforms and ds:DigestMethod 
+                    XmlNodeList ReferenceElementsChild = ManifestChildNodes[0].ChildNodes;
+                    for (int l = 0; l < ReferenceElementsChild.Count; l++)
+                    {
+                        if(ReferenceElementsChild[l].Name.Equals("ds:Transforms"))
+                        {
+                            algorithmTransforms = ReferenceElementsChild[l].FirstChild.Attributes["Algorithm"].Value;
+                            if (!SUPPORTED_TRANSFORMS.Contains(algorithmTransforms))
+                                return "ds:Transforms neobsahuje podporovaný algoritmus pre daný element podľa profilu XAdES_ZEP";
+                        }
+                        if (ReferenceElementsChild[l].Name.Equals("ds:DigestMethod"))
+                        {
+                            algorithmDigestMethod = ReferenceElementsChild[l].Attributes["Algorithm"].Value;
+                            if (!SUPPORTED_DIGEST_METHOD.Contains(algorithmDigestMethod))
+                                return "ds:DigestMethod neobsahuje podporovaný algoritmus pre daný element podľa profilu XAdES_ZEP";
+                        }
+                        if (ReferenceElementsChild[l].Name.Equals("ds:DigestValue"))
+                        {
+                            digestValue = ReferenceElementsChild[l].InnerText;
+                        }
+                    }
+                    ManifestReferenceUri = ManifestChildNodes[0].Attributes["URI"].Value;
+                    ManifestReferenceUri = ManifestReferenceUri.Substring(1);
+
+                    //check values ds:Manifest and ds:Object
+                    XmlNodeList ObjectElement = xades.SelectNodes("//ds:Object", namespaceId);
+                    for (int j = 0; j < ObjectElement.Count; j++)
+                    {
+                        if (ObjectElement[j].Attributes["Id"] == null)
+                            continue;
+                        if (ObjectElement[j].Attributes["Id"].Value.Equals(ManifestReferenceUri))
+                        { 
+                            flag1 = true;
+
+                            XmlDsigC14NTransform t = new XmlDsigC14NTransform();
+                            XmlDocument myDoc = new XmlDocument();
+                            myDoc.LoadXml(ObjectElement[i].OuterXml);
+                            t.LoadInput(myDoc);
+                            Stream s = (Stream)t.GetOutput(typeof(Stream));
+                            byte[] hash;
+                            string base64String = "";
+                            switch (algorithmDigestMethod)
+                            {
+                                case "http://www.w3.org/2001/04/xmldsig#sha1":
+                                    SHA1 sha1 = SHA1.Create();
+                                    hash = sha1.ComputeHash(s);
+                                    base64String = Convert.ToBase64String(hash);
+                                    break;
+                                case "http://www.w3.org/2001/04/xmlenc#sha256":
+                                    SHA256 sha256 = SHA256.Create();
+                                    hash = sha256.ComputeHash(s);
+                                    base64String = Convert.ToBase64String(hash);
+                                    break;
+                                case "http://www.w3.org/2001/04/xmldsig-more#sha384":
+                                    SHA384 sha384 = SHA384.Create();
+                                    hash = sha384.ComputeHash(s);
+                                    base64String = Convert.ToBase64String(hash);
+                                    break;
+                                case "http://www.w3.org/2001/04/xmlenc#sha512":
+                                    SHA512 sha512 = SHA512.Create();
+                                    hash = sha512.ComputeHash(s);
+                                    base64String = Convert.ToBase64String(hash);
+                                    break;
+                            }
+                            Console.WriteLine("Overenie hodnoty ds:DigestValue");
+                            Console.WriteLine("First " + base64String);
+                            Console.WriteLine("Second " + digestValue);
+                        }
+                    }
+                    if (!flag1)
+                        return "odkaz z ds:Manifest na ds:Object sa nezhoduje";
+                    flag1 = false;
+                }
+                else
+                    return "ds:Reference, hodnota atribútu Type sa neoverila voči profilu XADES_ZEP";
+            }
+
+
+            return "OK";
+        }
+
+        private string step_4(string filename) //TODO: Overenie časovej pečiatky
+        {
+            XmlDocument xades = new XmlDocument();
+            xades.Load(filename);
+            var namespaceId = new XmlNamespaceManager(xades.NameTable);
+            namespaceId.AddNamespace("ds", "http://www.w3.org/2000/09/xmldsig#");
+            namespaceId.AddNamespace("xades", "http://uri.etsi.org/01903/v1.3.2#");
+            string timestamp = xades.SelectSingleNode("//xades:EncapsulatedTimeStamp", namespaceId).InnerText;
+            byte[] newBytes = Convert.FromBase64String(timestamp);
+
+            try
+            {
+                TimeStampToken token = new TimeStampToken(new Org.BouncyCastle.Cms.CmsSignedData(newBytes));
+                Org.BouncyCastle.X509.X509Certificate signerCert = null;
+                Org.BouncyCastle.X509.Store.IX509Store x509Certs = token.GetCertificates("Collection");
+                ArrayList certs = new ArrayList(x509Certs.GetMatches(null));
+
+                // nájdenie podpisového certifikátu tokenu v kolekcii
+                foreach (Org.BouncyCastle.X509.X509Certificate cert in certs)
+                {
+                    string cerIssuerName = cert.IssuerDN.ToString(true, new Hashtable());
+                    string signerIssuerName = token.SignerID.Issuer.ToString(true, new Hashtable());
+
+                    // kontrola issuer name a seriového čísla
+                    if (cerIssuerName == signerIssuerName && cert.SerialNumber.Equals(token.SignerID.SerialNumber))
+                    {
+                        signerCert = cert;
+                        break;
+                    }
+                }
+
+                //check certificate, UtcNow
+                int result1 = DateTime.Compare(signerCert.NotAfter, DateTime.UtcNow);
+                int result2 = DateTime.Compare(DateTime.UtcNow, signerCert.NotBefore);
+
+                if (result1 < 0)
+                    return "platnosť certifikátu vypršala";
+                if (result2 < 0)
+                    return "certifikát nenadobúdol platnosť";
+
+                //check certificate, CRL
+                byte[] buf = File.ReadAllBytes("./Crl/certCasvovejPeciatky.crl");
+                X509CrlParser parserCrl = new X509CrlParser();
+                X509Crl readCrl = parserCrl.ReadCrl(buf);
+                if (readCrl.IsRevoked(signerCert))
+                    return "certifikát je neplatný";
+
+                //Console.WriteLine(Convert.ToBase64String(token.TimeStampInfo.TstInfo.MessageImprint.GetHashedMessage()));
+                //Console.WriteLine(token.TimeStampInfo.MessageImprintAlgOid);
+            }
+            catch (Exception e)
+            {
+                return e.Message.ToString();
+            }
 
             return "OK";
         }
         
-        private string step_4(string filename) //TODO: Overenie časovej pečiatky
-        {
-            return "TODO: dalsie body overenia";
-        }
-        
         private string step_5(string filename) //TODO: Overenie platnosti podpisového certifikátu
         {
-            return "TODO: dalsie body overenia";
+            XmlDocument xades = new XmlDocument();
+            xades.Load(filename);
+            var namespaceId = new XmlNamespaceManager(xades.NameTable);
+            namespaceId.AddNamespace("ds", "http://www.w3.org/2000/09/xmldsig#");
+            namespaceId.AddNamespace("xades", "http://uri.etsi.org/01903/v1.3.2#");
+            string certificate = xades.SelectSingleNode("//ds:KeyInfo/ds:X509Data/ds:X509Certificate", namespaceId).InnerText;
+            byte[] newBytes = Convert.FromBase64String(certificate);
+
+            try
+            {
+                TimeStampToken token = new TimeStampToken(new Org.BouncyCastle.Cms.CmsSignedData(newBytes));
+                Org.BouncyCastle.X509.X509Certificate signerCert = null;
+                Org.BouncyCastle.X509.Store.IX509Store x509Certs = token.GetCertificates("Collection");
+                ArrayList certs = new ArrayList(x509Certs.GetMatches(null));
+
+                // nájdenie podpisového certifikátu tokenu v kolekcii
+                foreach (Org.BouncyCastle.X509.X509Certificate cert in certs)
+                {
+                    string cerIssuerName = cert.IssuerDN.ToString(true, new Hashtable());
+                    string signerIssuerName = token.SignerID.Issuer.ToString(true, new Hashtable());
+
+                    // kontrola issuer name a seriového čísla
+                    if (cerIssuerName == signerIssuerName && cert.SerialNumber.Equals(token.SignerID.SerialNumber))
+                    {
+                        signerCert = cert;
+                        break;
+                    }
+                }
+
+                int result1 = DateTime.Compare(signerCert.NotAfter, DateTime.UtcNow);
+                int result2 = DateTime.Compare(DateTime.UtcNow, signerCert.NotBefore);
+
+                if (result1 < 0)
+                    return "platnosť certifikátu vypršala";
+                if (result2 < 0)
+                    return "certifikát nenadobúdol platnosť";
+
+                //check certificate, CRL
+                byte[] buf = File.ReadAllBytes("./Crl/dtctsa.crl");
+                X509CrlParser parserCrl = new X509CrlParser();
+                X509Crl readCrl = parserCrl.ReadCrl(buf);
+                if (readCrl.IsRevoked(signerCert))
+                    return "certifikát je neplatný";
+
+            }
+            catch (Exception e)
+            {
+                return e.Message.ToString();
+            }
+
+            return "OK";
         }
     }
 }
