@@ -20,7 +20,7 @@ using Org.BouncyCastle.X509.Store;
 using Org.BouncyCastle.Cms;
 using Org.BouncyCastle.Asn1.Tsp;
 using System.Security.Cryptography.X509Certificates;
-using LanguageExt;
+//using LanguageExt;
 using System.Numerics;
 using System.Globalization;
 using System.Security.Cryptography.Xml;
@@ -63,14 +63,15 @@ namespace SIPVS
             {
                 return status;
             }
-            if((status=step_4(filename)) != "OK") //TODO: Overenie časovej pečiatky 
+            if((status=step_4(filename)) != "OK") //TODO: Overenie časovej pečiatky  a  Overenie platnosti podpisového certifikátu
             {
                 return status;
             }
-            if((status=step_5(filename)) != "OK") //TODO: Overenie platnosti podpisového certifikátu 
+            /*
+            if((status=step_5(filename)) != "OK") //TODO:  
             {
                 return status;
-            }
+            }*/
             return "OK";
         }
 
@@ -486,9 +487,15 @@ namespace SIPVS
             string timestamp = xades.SelectSingleNode("//xades:EncapsulatedTimeStamp", namespaceId).InnerText;
             byte[] newBytes = Convert.FromBase64String(timestamp);
 
+            byte[] signatureCertificate = Convert.FromBase64String(xades.SelectSingleNode(@"//ds:KeyInfo/ds:X509Data/ds:X509Certificate", namespaceId).InnerText);
+            X509CertificateParser x509parser = new X509CertificateParser();
+            Org.BouncyCastle.X509.X509Certificate x509cert = x509parser.ReadCertificate(signatureCertificate);
+
+            TimeStampToken token = new TimeStampToken(new Org.BouncyCastle.Cms.CmsSignedData(newBytes));
+
             try
             {
-                TimeStampToken token = new TimeStampToken(new Org.BouncyCastle.Cms.CmsSignedData(newBytes));
+                
                 Org.BouncyCastle.X509.X509Certificate signerCert = null;
                 Org.BouncyCastle.X509.Store.IX509Store x509Certs = token.GetCertificates("Collection");
                 ArrayList certs = new ArrayList(x509Certs.GetMatches(null));
@@ -510,21 +517,37 @@ namespace SIPVS
                 //check certificate, UtcNow
                 int result1 = DateTime.Compare(signerCert.NotAfter, DateTime.UtcNow);
                 int result2 = DateTime.Compare(DateTime.UtcNow, signerCert.NotBefore);
+                //check x509 certtificate, timestamtoken.GenTime
+                int result3 = DateTime.Compare(x509cert.NotAfter, token.TimeStampInfo.TstInfo.GenTime.ToDateTime());
+                int result4 = DateTime.Compare(token.TimeStampInfo.TstInfo.GenTime.ToDateTime(), x509cert.NotBefore);
+
 
                 if (result1 < 0)
                     return "platnosť certifikátu vypršala";
                 if (result2 < 0)
                     return "certifikát nenadobúdol platnosť";
+                if (result3 < 0)
+                    return "platnosť podpisového certifikátu v čase T vypršala";
+                if (result4 < 0)
+                    return "platnosť podpisového certifikátu v čase T nenadobudla plastnosť";
+
 
                 //check certificate, CRL
-                byte[] buf = File.ReadAllBytes("./Crl/certCasvovejPeciatky.crl");
-                X509CrlParser parserCrl = new X509CrlParser();
-                X509Crl readCrl = parserCrl.ReadCrl(buf);
-                if (readCrl.IsRevoked(signerCert))
+                byte[] buf1 = File.ReadAllBytes("./Crl/certCasvovejPeciatky.crl");
+                X509CrlParser parserCrl1 = new X509CrlParser();
+                X509Crl readCrl1 = parserCrl1.ReadCrl(buf1);
+                if (readCrl1.IsRevoked(signerCert))
                     return "certifikát je neplatný";
 
-                //Console.WriteLine(Convert.ToBase64String(token.TimeStampInfo.TstInfo.MessageImprint.GetHashedMessage()));
-                //Console.WriteLine(token.TimeStampInfo.MessageImprintAlgOid);
+                //check certificate, CRL
+                byte[] buf2 = File.ReadAllBytes("./Crl/dtctsa.crl");
+                X509CrlParser parserCrl2 = new X509CrlParser();
+                X509Crl readCrl2 = parserCrl2.ReadCrl(buf2);
+                if (readCrl2.IsRevoked(x509cert))
+                    return "certifikát je neplatný";
+
+
+
             }
             catch (Exception e)
             {
@@ -536,55 +559,7 @@ namespace SIPVS
         
         private string step_5(string filename) //TODO: Overenie platnosti podpisového certifikátu
         {
-            XmlDocument xades = new XmlDocument();
-            xades.Load(filename);
-            var namespaceId = new XmlNamespaceManager(xades.NameTable);
-            namespaceId.AddNamespace("ds", "http://www.w3.org/2000/09/xmldsig#");
-            namespaceId.AddNamespace("xades", "http://uri.etsi.org/01903/v1.3.2#");
-            string certificate = xades.SelectSingleNode("//ds:KeyInfo/ds:X509Data/ds:X509Certificate", namespaceId).InnerText;
-            byte[] newBytes = Convert.FromBase64String(certificate);
-
-            try
-            {
-                TimeStampToken token = new TimeStampToken(new Org.BouncyCastle.Cms.CmsSignedData(newBytes));
-                Org.BouncyCastle.X509.X509Certificate signerCert = null;
-                Org.BouncyCastle.X509.Store.IX509Store x509Certs = token.GetCertificates("Collection");
-                ArrayList certs = new ArrayList(x509Certs.GetMatches(null));
-
-                // nájdenie podpisového certifikátu tokenu v kolekcii
-                foreach (Org.BouncyCastle.X509.X509Certificate cert in certs)
-                {
-                    string cerIssuerName = cert.IssuerDN.ToString(true, new Hashtable());
-                    string signerIssuerName = token.SignerID.Issuer.ToString(true, new Hashtable());
-
-                    // kontrola issuer name a seriového čísla
-                    if (cerIssuerName == signerIssuerName && cert.SerialNumber.Equals(token.SignerID.SerialNumber))
-                    {
-                        signerCert = cert;
-                        break;
-                    }
-                }
-
-                int result1 = DateTime.Compare(signerCert.NotAfter, DateTime.UtcNow);
-                int result2 = DateTime.Compare(DateTime.UtcNow, signerCert.NotBefore);
-
-                if (result1 < 0)
-                    return "platnosť certifikátu vypršala";
-                if (result2 < 0)
-                    return "certifikát nenadobúdol platnosť";
-
-                //check certificate, CRL
-                byte[] buf = File.ReadAllBytes("./Crl/dtctsa.crl");
-                X509CrlParser parserCrl = new X509CrlParser();
-                X509Crl readCrl = parserCrl.ReadCrl(buf);
-                if (readCrl.IsRevoked(signerCert))
-                    return "certifikát je neplatný";
-
-            }
-            catch (Exception e)
-            {
-                return e.Message.ToString();
-            }
+            
 
             return "OK";
         }
