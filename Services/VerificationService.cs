@@ -141,15 +141,103 @@ namespace SIPVS
             return "OK";
         }
 
+        private bool verifySign(byte[] certificateData, byte[] signature, byte[] data, string digestAlg, out string errorMessage)
+        {
+            try
+            {
+                Org.BouncyCastle.Asn1.X509.SubjectPublicKeyInfo ski = Org.BouncyCastle.Asn1.X509.X509CertificateStructure.GetInstance(Org.BouncyCastle.Asn1.Asn1Object.FromByteArray(certificateData)).SubjectPublicKeyInfo;
+                Org.BouncyCastle.Crypto.AsymmetricKeyParameter pk = Org.BouncyCastle.Security.PublicKeyFactory.CreateKey(ski);
+
+                string algStr = ""; //signature alg
+
+                //find digest
+                switch (digestAlg)
+                {
+                    case "http://www.w3.org/2000/09/xmldsig#rsa-sha1":
+                        algStr = "sha1";
+                        break;
+                    case "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256":
+                        algStr = "sha256";
+                        break;
+                    case "http://www.w3.org/2001/04/xmldsig-more#rsa-sha384":
+                        algStr = "sha384";
+                        break;
+                    case "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512":
+                        algStr = "sha512";
+                        break;
+                }
+
+                //find encryption
+                switch (ski.AlgorithmID.ObjectID.Id)
+                {
+                    case "1.2.840.10040.4.1": //dsa
+                        algStr += "withdsa";
+                        break;
+                    case "1.2.840.113549.1.1.1": //rsa
+                        algStr += "withrsa";
+                        break;
+                    default:
+                        errorMessage = "verifySign 5: Unknown key algId = " + ski.AlgorithmID.ObjectID.Id;
+                        return false;
+                }
+
+                Console.WriteLine("Hash digest pred decryptom: " + Convert.ToBase64String(data));
+               
+
+                errorMessage = "verifySign 8: Creating signer: " + algStr;
+                Org.BouncyCastle.Crypto.ISigner verif = Org.BouncyCastle.Security.SignerUtilities.GetSigner(algStr);
+                verif.Init(false, pk);
+                verif.BlockUpdate(data, 0, data.Length);
+                bool res = verif.VerifySignature(signature);
+
+                Console.WriteLine("Hodnota pk je: " + pk.GetHashCode());
+
+                Console.WriteLine("Hash digest po decrypte: " + Convert.ToBase64String(data));
+
+                Console.WriteLine("- ");
+                Console.WriteLine("Hodnota je " + res);
+                Console.WriteLine("- ");
+                if (!res)
+                {
+                    errorMessage = "verifySign 9: VerifySignature=false: dataB64=" + Convert.ToBase64String(data) + Environment.NewLine + "signatureB64=" + Convert.ToBase64String(signature) + Environment.NewLine + "certificateDataB64=" + Convert.ToBase64String(certificateData);
+                }
+
+                return res;
+
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "verifySign 10: " + ex.ToString();
+                return false;
+            }
+        }
+
+
         private string step_3(string filename) //Core validation
         {
+
+
+            string[] SUPPORTED_TRANSFORMS = {
+                "http://www.w3.org/TR/2001/REC-xml-c14n-20010315",
+                "http://www.w3.org/2000/09/xmldsig#base64",
+            };
+            string[] SUPPORTED_DIGEST_METHOD = {
+                "http://www.w3.org/2001/04/xmlenc#sha512 ",
+                "http://www.w3.org/2001/04/xmldsig-more#sha384",
+                "http://www.w3.org/2001/04/xmlenc#sha256",
+                "http://www.w3.org/2001/04/xmldsig-more#sha224",
+                "http://www.w3.org/2000/09/xmldsig#sha1",
+            };
+
             XmlDocument xades = new XmlDocument();
             xades.Load(filename);
             var namespaceId = new XmlNamespaceManager(xades.NameTable);
             namespaceId.AddNamespace("ds", "http://www.w3.org/2000/09/xmldsig#");
             namespaceId.AddNamespace("xades", "http://uri.etsi.org/01903/v1.3.2#");
-            //signed info kanonikaliyovat
-            //
+            
+            
+
+
 
 
             //check ds:SignedInfo and ds:Manifest
@@ -194,14 +282,43 @@ namespace SIPVS
 
                     byte[] digest = t.GetDigestedOutput(hash);
                     string result = Convert.ToBase64String(digest);
+
+                    Console.WriteLine("-");
                     Console.WriteLine("Overenie hodnoty podpisu");
                     Console.WriteLine(result);
                     Console.WriteLine(dsDigestValue);
+                    Console.WriteLine("-");
+
                     if (!result.Equals(dsDigestValue))
                         return "hodnoty DigestValue s výpočtom Manifest sa nezhodujú";
                 }
             }
 
+            //signed info kanonikalizovat
+
+            XmlNode checkData = xades.SelectSingleNode(@"//ds:KeyInfo/ds:X509Data/ds:X509Certificate", namespaceId);
+            if (checkData == null)
+                return "neobsahuje element ds:X509Data";
+
+            byte[] signatureCertificate = Convert.FromBase64String(xades.SelectSingleNode(@"//ds:KeyInfo/ds:X509Data/ds:X509Certificate", namespaceId).InnerText);
+            byte[] signature = Convert.FromBase64String(xades.SelectSingleNode(@"//ds:SignatureValue", namespaceId).InnerText);
+            XmlNode signedInfoNnn = xades.SelectSingleNode(@"//ds:SignedInfo", namespaceId);
+            string signedInfoTransformAlg = xades.SelectSingleNode(@"//ds:SignedInfo/ds:CanonicalizationMethod", namespaceId).Attributes.GetNamedItem("Algorithm").Value;
+            string signedInfoSignatureAlg = xades.SelectSingleNode(@"//ds:SignedInfo/ds:SignatureMethod", namespaceId).Attributes.GetNamedItem("Algorithm").Value;
+
+            XmlDsigC14NTransform t1 = new XmlDsigC14NTransform(false);
+            XmlDocument pom = new XmlDocument();
+            pom.LoadXml(signedInfoNnn.OuterXml);
+            t1.LoadInput(pom);
+            byte[] data = ((MemoryStream)t1.GetOutput()).ToArray();
+
+            string errMsg = "";
+            bool res = this.verifySign(signatureCertificate, signature, data, signedInfoSignatureAlg, out errMsg);
+            if (!res)
+            {
+                Console.WriteLine("Error " + errMsg);
+                return errMsg;
+            }
 
 
             //check Id in ds:Signature
@@ -313,6 +430,7 @@ namespace SIPVS
             String IssuerSerialFirst = "";
             String IssuerSerialSecond = "";
             String SubjectName = "";
+
             for (int i = 0; i < elemList.Count; i++)
             {
                 switch (elemList[i].Name)
@@ -371,17 +489,9 @@ namespace SIPVS
             String algorithmTransforms = "";
             String digestValue = "";
             bool flag1 = false;
-            string[] SUPPORTED_TRANSFORMS = {
-                "http://www.w3.org/TR/2001/REC-xml-c14n-20010315",
-                "http://www.w3.org/2000/09/xmldsig#base64",
-            };
-            string[] SUPPORTED_DIGEST_METHOD = {
-                "http://www.w3.org/2001/04/xmlenc#sha512 ",
-                "http://www.w3.org/2001/04/xmldsig-more#sha384",
-                "http://www.w3.org/2001/04/xmlenc#sha256",
-                "http://www.w3.org/2001/04/xmldsig-more#sha224",
-                "http://www.w3.org/2000/09/xmldsig#sha1",
-            };
+            
+
+
             for (int i = 0; i < ElementManifest.Count; i++)
             {
                 //check ds:Manifest Id
@@ -460,9 +570,12 @@ namespace SIPVS
                                     base64String = Convert.ToBase64String(hash);
                                     break;
                             }
+                            Console.WriteLine("-");
                             Console.WriteLine("Overenie hodnoty ds:DigestValue");
                             Console.WriteLine("First " + base64String);
                             Console.WriteLine("Second " + digestValue);
+                            Console.WriteLine("-");
+                            
                         }
                     }
                     if (!flag1)
@@ -490,6 +603,11 @@ namespace SIPVS
             byte[] signatureCertificate = Convert.FromBase64String(xades.SelectSingleNode(@"//ds:KeyInfo/ds:X509Data/ds:X509Certificate", namespaceId).InnerText);
             X509CertificateParser x509parser = new X509CertificateParser();
             Org.BouncyCastle.X509.X509Certificate x509cert = x509parser.ReadCertificate(signatureCertificate);
+
+            string signedInfoSignatureAlg = xades.SelectSingleNode(@"//ds:SignedInfo/ds:SignatureMethod", namespaceId).Attributes.GetNamedItem("Algorithm").Value;
+
+            byte[] signature = Convert.FromBase64String(xades.SelectSingleNode(@"//ds:SignatureValue", namespaceId).InnerText);
+
 
             TimeStampToken token = new TimeStampToken(new Org.BouncyCastle.Cms.CmsSignedData(newBytes));
 
@@ -531,6 +649,17 @@ namespace SIPVS
                 if (result4 < 0)
                     return "platnosť podpisového certifikátu v čase T nenadobudla plastnosť";
 
+                /*
+                Console.WriteLine("step4");
+                //check messageImprint against SignatureValue
+                string errMsg = "";
+                bool res = this.verifySign(signatureCertificate, signature, token.TimeStampInfo.GetMessageImprintDigest(), signedInfoSignatureAlg, out errMsg);
+                if (!res)
+                {
+                    Console.WriteLine("Error " + errMsg);
+                    return errMsg;
+                }
+                */
 
                 //check certificate, CRL
                 byte[] buf1 = File.ReadAllBytes("./Crl/certCasvovejPeciatky.crl");
